@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "jsx": "preserve",
+
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "verbatimModuleSyntax": true,
+
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["project-root/*"],
+      "@/*": ["project-root/*"]
+    },
+
+    "types": ["node"]
+  },
+  "include": [
+    "nuxt.config.*",
+    "project-root/app.vue",
+    "project-root/pages/**/*",
+    "project-root/components/**/*",
+    "project-root/composables/**/*",
+    "project-root/layouts/**/*",
+    "project-root/plugins/**/*",
+    "project-root/stores/**/*",
+    "project-root/utils/**/*",
+    "project-root/types/**/*",
+    "vitest.config.ts"
+  ],
+  "exclude": ["node_modules", ".nuxt", "dist"]
+}

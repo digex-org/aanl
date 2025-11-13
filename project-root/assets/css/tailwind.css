@@ -1,0 +1,8 @@
+/* tailwind.css */
+@import "tailwindcss";
+
+/* tokens.css (shared) - Merge or import if separate */
+:root {
+  --brand-navy:#1D50A2; --brand-blue:#3EA1F1;
+  --radius-card:12px; --radius-input:10px;
+}
