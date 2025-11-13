@@ -8,7 +8,7 @@
 
 // (1) Auto-import all division images (webp/png/jpg)
 const imageModules = import.meta.glob(
-  '~/assets/images/division/*.{webp,png,jpg,jpeg}',
+  '~/assets/images/divisions/*.{webp,png,jpg,jpeg}',
   { eager: true, import: 'default' }
 ) as Record<string, string>
 
