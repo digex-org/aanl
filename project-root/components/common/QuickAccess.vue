@@ -60,7 +60,7 @@ function linkAttrs(i: QuickAccessItem) {
       <h3 class="font-semibold">{{ title }}</h3>
       <button
         type="button"
-        class="size-7 grid place-items-center rounded-md/2 text-white/90 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+        class="size-7 cursor-pointer grid place-items-center rounded-md/2 text-white/90 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
         @click="collapseAll"
         aria-label="Collapse all"
         title="Collapse all"
@@ -75,13 +75,13 @@ function linkAttrs(i: QuickAccessItem) {
         <li v-for="i in items" :key="i.key">
           <button
             type="button"
-            class="w-full flex items-center justify-between px-4 py-3 text-left font-medium"
+            class="w-full cursor-pointer flex items-center justify-between px-4 py-3 text-left font-medium"
             @click="open[i.key] = !open[i.key]"
             :aria-expanded="open[i.key]"
           >
             <span>{{ i.label }}</span>
             <span
-              class="ml-3 inline-grid size-6 place-items-center rounded-md bg-white/5 ring-1 ring-white/10"
+              class="ml-3 cursor-pointer inline-grid size-6 place-items-center rounded-md bg-white/5 ring-1 ring-white/10"
             >
               <span v-if="!open[i.key]">+</span>
               <span v-else>−</span>
@@ -94,7 +94,7 @@ function linkAttrs(i: QuickAccessItem) {
               <NuxtLink
                 v-if="linkAttrs(i).isNuxt"
                 :to="i.to!"
-                class="inline-flex items-center gap-2 text-white hover:text-white/90 underline underline-offset-2"
+                class="inline-flex cursor-pointer items-center gap-2 text-black hover:underline  underline-offset-2"
               >
                 Open {{ i.label }}
                 <svg class="size-4" viewBox="0 0 20 20" fill="none">
@@ -108,7 +108,7 @@ function linkAttrs(i: QuickAccessItem) {
                 :href="i.href!"
                 target="_blank"
                 rel="noopener"
-                class="inline-flex items-center gap-2 text-white hover:text-white/90 underline underline-offset-2"
+                class="inline-flex cursor-pointer items-center gap-2 text-black hover:underline  underline-offset-2"
               >
                 Open {{ i.label }}
                 <svg class="size-4" viewBox="0 0 20 20" fill="none">

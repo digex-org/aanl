@@ -1,3 +1,4 @@
+<!-- pages/divisions/[slug].vue -->
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
@@ -5,10 +6,7 @@ import { useHead } from '#imports'
 
 import { useBreadcrumbs } from '~/composables/useBreadcrumbs'
 import { divisions, type Division } from '~/data/divisions'
-
-import { Swiper, SwiperSlide } from 'swiper/vue'
-import { Navigation, Pagination, A11y } from 'swiper/modules'
-import type { Swiper as SwiperType } from 'swiper'
+import UiSwiper from '~/components/common/UiSwiper.vue'
 
 /* ---------- Route / entity ---------- */
 const route = useRoute()
@@ -27,9 +25,7 @@ const { crumbs, jsonLd } = useBreadcrumbs({
 /* ---------- Head / SEO ---------- */
 useHead(() => ({
   title: division.value ? `${division.value.title} — AANL` : 'Division — AANL',
-  script: [
-    { type: 'application/ld+json', children: JSON.stringify(jsonLd.value) }
-  ]
+  script: [{ type: 'application/ld+json', children: JSON.stringify(jsonLd.value) }]
 }))
 
 /* ---------- Assets: banner + related images ---------- */
@@ -37,9 +33,7 @@ const mods = import.meta.glob('~/assets/images/divisions/*', {
   eager: true,
   import: 'default'
 }) as Record<string, string>
-const byFile = Object.fromEntries(
-  Object.entries(mods).map(([p, u]) => [p.split('/').pop()!, u])
-)
+const byFile = Object.fromEntries(Object.entries(mods).map(([p, u]) => [p.split('/').pop()!, u]))
 
 const bannerSrc = computed(() => (division.value && byFile[division.value.image]) || '')
 const relatedSrc = (file: string) => byFile[file] || ''
@@ -66,9 +60,7 @@ const collaborations = ref<Collab[]>([
     { label: 'CERN–LHC', href: 'https://home.cern' }, { label: 'ATLAS', href: 'https://atlas.cern' },
     { label: 'ALICE', href: 'https://alice.cern' }, { label: 'CMS', href: 'https://cms.cern' }, { label: 'AMBER', href: 'https://amber.web.cern.ch' }
   ]},
-  { text: 'Hadron physics based on HERMES and H1 data / collaboration with', links: [
-    { label: 'DESY', href: 'https://www.desy.de' }
-  ]},
+  { text: 'Hadron physics based on HERMES and H1 data / collaboration with', links: [{ label: 'DESY', href: 'https://www.desy.de' }]},
   { text: 'Very high energy gamma ray astrophysics / collaboration with', links: [
     { label: 'HESS', href: 'https://www.mpi-hd.mpg.de/hfm/HESS' }, { label: 'CTA', href: 'https://www.cta-observatory.org' }
   ]},
@@ -79,50 +71,23 @@ const collaborations = ref<Collab[]>([
   { text: 'Fission and fragmentation of nuclei with real photon beams / collaboration with', links: [
     { label: 'ELI-NP', href: 'https://www.eli-np.ro' }, { label: 'HİyS', href: 'https://hlys.org' }
   ]},
-  { text: 'Joint Institute for Nuclear Research (Dubna, Russia)', links: [
-    { label: 'JINR', href: 'https://www.jinr.ru' }
-  ]},
-  { text: 'University of Glasgow, Scotland', links: [
-    { label: 'University of Glasgow', href: 'https://www.gla.ac.uk' }
-  ]},
-  { text: 'ELI-NP Center, Bucharest, Romania', links: [
-    { label: 'ELI-NP Center', href: 'https://www.eli-np.ro' }
-  ]},
-  { text: 'Gutenberg University, Mainz, Germany', links: [
-    { label: 'Gutenberg University', href: 'https://www.uni-mainz.de' }
-  ]},
-  { text: 'Tohoku University, Japan', links: [
-    { label: 'Tohoku University', href: 'https://www.tohoku.ac.jp' }
-  ]}
+  { text: 'Joint Institute for Nuclear Research (Dubna, Russia)', links: [{ label: 'JINR', href: 'https://www.jinr.ru' }]},
+  { text: 'University of Glasgow, Scotland', links: [{ label: 'University of Glasgow', href: 'https://www.gla.ac.uk' }]},
+  { text: 'ELI-NP Center, Bucharest, Romania', links: [{ label: 'ELI-NP Center', href: 'https://www.eli-np.ro' }]},
+  { text: 'Gutenberg University, Mainz, Germany', links: [{ label: 'Gutenberg University', href: 'https://www.uni-mainz.de' }]},
+  { text: 'Tohoku University, Japan', links: [{ label: 'Tohoku University', href: 'https://www.tohoku.ac.jp' }]}
 ])
 
 /* ---------- Related ---------- */
-const related = computed(() =>
-  divisions.filter(d => d.slug !== slug.value).slice(0, 8)
-)
+const related = computed(() => divisions.filter(d => d.slug !== slug.value).slice(0, 8))
 
-/* Swiper setup */
-const modules = [Navigation, Pagination, A11y]
-const swiperBreakpoints = {
+/* UiSwiper breakpoints (can be overridden per use) */
+const relatedBreakpoints = {
   320:  { slidesPerView: 1.12, spaceBetween: 16 },
   480:  { slidesPerView: 1.5,  spaceBetween: 16 },
   640:  { slidesPerView: 2,    spaceBetween: 18 },
   768:  { slidesPerView: 3,    spaceBetween: 20 },
   1024: { slidesPerView: 4,    spaceBetween: 24 }
-}
-const swiperRef = ref<SwiperType | null>(null)
-function onSwiper(sw: SwiperType) { swiperRef.value = sw }
-
-/* Clickable progress line */
-function onProgressClick(e: MouseEvent) {
-  const el = e.currentTarget as HTMLElement
-  if (!el || !swiperRef.value) return
-  const rect = el.getBoundingClientRect()
-  const ratio = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width))
-  const sw = swiperRef.value
-  const snaps = sw.snapGrid.length
-  if (snaps <= 1) return
-  sw.slideTo(Math.round((snaps - 1) * ratio))
 }
 </script>
 
@@ -148,12 +113,13 @@ function onProgressClick(e: MouseEvent) {
               </li>
             </ol>
           </nav>
-                  <!-- title aligned to bottom-left -->
-        <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 mt-30 sm:mt-25 h-full flex items-end pb-4 sm:pb-8">
-          <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            {{ division.title }}
-          </h1>
-        </div>
+
+          <!-- title aligned to bottom-left -->
+          <div class="mt-28 sm:mt-24 h-full flex items-end pb-4 sm:pb-8">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+              {{ division.title }}
+            </h1>
+          </div>
         </div>
       </div>
     </section>
@@ -171,14 +137,14 @@ function onProgressClick(e: MouseEvent) {
         </div>
 
         <!-- Right: Quick Access -->
-         <aside class="lg:col-span-4">
-            <CommonQuickAccess
-                :items="qaItems"
-                title="Quick access"
-                sticky
-                sticky-top="top-4"
-                brand-color-class="bg-[--brand-navy]"  
-            />
+        <aside class="lg:col-span-4">
+          <CommonQuickAccess
+            :items="qaItems"
+            title="Quick access"
+            sticky
+            sticky-top="top-4"
+            brand-color-class="bg-[--brand-navy]"
+          />
         </aside>
       </div>
     </section>
@@ -191,12 +157,12 @@ function onProgressClick(e: MouseEvent) {
 
           <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-4">
             <div v-for="(c, idx) in collaborations" :key="idx" class="flex items-start gap-3">
-              <span class="size-6 text-center mb-5 shrink-0 grid text-[--brand-navy]">→</span>
+              <span class="size-6 text-[#1D50A2] text-center mb-5 shrink-0 grid">→</span>
               <p class="text-sm sm:text-[15px] text-gray-800 dark:text-gray-200">
                 <span class="font-medium">{{ c.text }}</span>
                 <template v-if="c.links?.length">
                   <template v-for="(l, i) in c.links" :key="l.href">
-                    <a :href="l.href" target="_blank" rel="noopener" class="text-[--brand-navy] hover:underline ml-1">{{ l.label }}</a><span v-if="i < c.links.length - 1">,</span>
+                    <a :href="l.href" target="_blank" rel="noopener" class="text-[#1D50A2] hover:underline ml-1">{{ l.label }}</a><span v-if="i < c.links.length - 1">,</span>
                   </template>
                 </template>
               </p>
@@ -214,14 +180,9 @@ function onProgressClick(e: MouseEvent) {
         <div class="rounded-1xl border border-black/5 dark:border-white/10 bg-white dark:bg-gray-900 shadow-sm p-5 sm:p-7 lg:p-8">
           <div class="flex items-start justify-between gap-6">
             <div>
-              <h2 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
-                Career And Education Opportunities
-              </h2>
+              <h2 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Career And Education Opportunities</h2>
               <p class="mt-2 text-sm sm:text-[15px] text-gray-700 dark:text-gray-300 max-w-4xl">
-                Prospective students and researchers can apply for PhD and junior researcher positions in experimental programs on LUE-75 and the C18/18 cyclotron. Joint programs with
-                <span class="text-[--brand-navy]">CERN</span>, <span class="text-[--brand-navy]">JLab</span>,
-                <span class="text-[--brand-navy]">FermiLab</span>, and <span class="text-[--brand-navy]">BNL</span>
-                are available, including exchange studies and summer schools.
+                Prospective students and researchers can apply for PhD and junior researcher positions… exchange studies and summer schools.
               </p>
             </div>
             <NuxtLink
@@ -237,63 +198,30 @@ function onProgressClick(e: MouseEvent) {
       </div>
     </section>
 
-    <!-- Related divisions (Swiper) -->
+    <!-- Related divisions (UiSwiper) -->
     <section class="pb-12">
       <div class="mx-auto max-w-7xl px-2 sm:px-4 lg:px-6">
-        <div class="related-swiper relative mt-5 overflow-hidden px-2 pb-8">
-          <ClientOnly>
-            <Swiper
-              :modules="modules"
-              :breakpoints="swiperBreakpoints"
-              :watchSlidesProgress="true"
-              :watchOverflow="true"
-              :navigation="{ nextEl: '.rel-next', prevEl: '.rel-prev' }"
-              :pagination="{ el: '.rel-progress', type: 'progressbar' }"
-              :a11y="{ enabled: true }"
-              @swiper="onSwiper"
-            >
-              <SwiperSlide v-for="d in related" :key="d.slug" class="!h-auto">
-                <article class="h-full rounded-xl bg-white dark:bg-gray-900 shadow-sm ring-1 ring-black/5 dark:ring-white/10 overflow-hidden">
-                  <NuxtLink :to="`/divisions/${d.slug}`" class="block h-full">
-                    <img :src="relatedSrc(d.image)" :alt="d.title" class="w-full h-40 sm:h-44 md:h-48 object-cover" loading="lazy" decoding="async" />
-                    <div class="p-4">
-                      <h3 class="text-[16px] font-semibold text-gray-900 dark:text-gray-100">{{ d.title }}</h3>
-                      <p class="mt-1 text-sm text-gray-600 dark:text-gray-300 line-clamp-3">{{ d.excerpt }}</p>
-                    </div>
-                  </NuxtLink>
-                </article>
-              </SwiperSlide>
-
-              <!-- (Optional) arrows — keep inside wrapper to avoid scrollbars -->
-              <!--
-              <button class="rel-prev hidden sm:flex absolute left-1 top-1/2 -translate-y-1/2
-                             size-9 md:size-10 items-center justify-center rounded-full
-                             bg-white/90 dark:bg-gray-900/90 ring-1 ring-black/10 dark:ring-white/10 shadow-md
-                             hover:bg-white dark:hover:bg-gray-800 focus-visible:outline-none
-                             focus-visible:ring-2 focus-visible:ring-[--brand-navy] z-10" aria-label="Previous">
-                <svg viewBox="0 0 20 20" class="size-5" fill="none">
-                  <path d="M12 5l-5 5 5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
-              <button class="rel-next hidden sm:flex absolute right-1 top-1/2 -translate-y-1/2
-                             size-9 md:size-10 items-center justify-center rounded-full
-                             bg-white/90 dark:bg-gray-900/90 ring-1 ring-black/10 dark:ring-white/10 shadow-md
-                             hover:bg-white dark:hover:bg-gray-800 focus-visible:outline-none
-                             focus-visible:ring-2 focus-visible:ring-[--brand-navy] z-10" aria-label="Next">
-                <svg viewBox="0 0 20 20" class="size-5" fill="none">
-                  <path d="M8 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
-              -->
-            </Swiper>
-
-            <!-- Centered clickable progress line -->
-            <div class="mt-6 flex justify-center">
-              <div class="rel-progress swiper-pagination cursor-pointer w-full max-w-md h-[3px]"
-                   @click="onProgressClick"></div>
-            </div>
-          </ClientOnly>
-        </div>
+        <UiSwiper
+          :items="related"
+          :breakpoints="relatedBreakpoints"
+          :show-nav="false"
+          :show-progress="true"
+          wrapper-class="mt-5 px-2"
+          progress-max-width-class="max-w-md"
+          :get-key="(d) => d.slug"
+        >
+          <template #default="{ item: d }">
+            <article class="h-full rounded-xl bg-white dark:bg-gray-900 shadow-sm ring-1 ring-black/5 dark:ring-white/10 overflow-hidden">
+              <NuxtLink :to="`/divisions/${d.slug}`" class="block h-full">
+                <img :src="relatedSrc(d.image)" :alt="d.title" class="w-full h-40 sm:h-44 md:h-48 object-cover" loading="lazy" decoding="async" />
+                <div class="p-4">
+                  <h3 class="text-[16px] font-semibold text-gray-900 dark:text-gray-100">{{ d.title }}</h3>
+                  <p class="mt-1 text-sm text-gray-600 dark:text-gray-300 line-clamp-3">{{ d.excerpt }}</p>
+                </div>
+              </NuxtLink>
+            </article>
+          </template>
+        </UiSwiper>
       </div>
     </section>
   </div>
@@ -309,25 +237,6 @@ function onProgressClick(e: MouseEvent) {
 </template>
 
 <style scoped>
-/* prose spacing */
+/* Prose spacing */
 .prose p + p { margin-top: 1rem; }
-
-/* ---- Swiper progressbar styling (clickable line) ---- */
-:global(.related-swiper .swiper-pagination-progressbar) {
-  position: relative;       /* keep it in normal flow */
-  width: 100%;
-  height: 3px;
-  border-radius: 9999px;
-  background-color: rgb(229 231 235 / 0.6); /* gray-200/60 */
-}
-:global(.dark .related-swiper .swiper-pagination-progressbar) {
-  background-color: rgb(255 255 255 / 0.10);
-}
-:global(.related-swiper .swiper-pagination-progressbar-fill) {
-  background-color: var(--brand-navy, #1D50A2);
-  border-radius: 9999px;
-}
-
-/* Prevent phantom horizontal scrollbars */
-.related-swiper { overflow: hidden; }
 </style>
