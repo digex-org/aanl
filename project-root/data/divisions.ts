@@ -3,7 +3,7 @@ export type Division = {
   slug: string
   title: string
   excerpt: string
-  image: string           // filename in assets/images/divisions
+  image: string
   accent?: 'blue' | 'pink' | 'orange' | 'green' | 'purple' | 'teal'
 }
 
@@ -41,7 +41,7 @@ export const divisions: Division[] = [
     accent: 'green'
   },
   {
-    slug: 'cosmic-rays',
+    slug: 'cosmic-rays', // #5
     title: 'Cosmic ray division',
     excerpt:
       'Aragats high-mountain stations and SEVAN network studies; space weather, radiation, and atmospheric phenomena.',
@@ -49,12 +49,12 @@ export const divisions: Division[] = [
     accent: 'blue'
   },
   {
-    slug: 'computational-physics-it',
+    slug: 'computational-physics-it', // #6 — changed to avoid adjacent blue
     title: 'Computational physics and IT division',
     excerpt:
       'Scientific software, data pipelines, numerical simulations, network resources and HPC for experimental programs.',
     image: 'Leonardo_Phoenix_A_futuristic_experimental.webp',
-    accent: 'red' as any // falls back to pink; or use 'pink'
+    accent: 'teal' // was 'blue'
   },
   {
     slug: 'applied-physics',

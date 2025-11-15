@@ -3,20 +3,21 @@ import type { Division } from '~/data/divisions'
 
 const props = defineProps<{ item: Division }>()
 
-/* resolve image from assets */
+// Resolve image from assets
 const mods = import.meta.glob('~/assets/images/divisions/*', { eager: true, import: 'default' }) as Record<string,string>
 const byFile = Object.fromEntries(Object.entries(mods).map(([p,u]) => [p.split('/').pop()!, u]))
 const src = computed(() => byFile[props.item.image] || '')
 
-/* map to TOP BORDER color classes (not overlay) */
+// Solid TOP BORDER color map (brand blue included)
 function topBorderColor(a?: Division['accent']) {
   switch (a) {
+    case 'blue':   return 'border-t-[#1D50A2]'  // brand blue
     case 'pink':   return 'border-t-rose-500'
     case 'orange': return 'border-t-amber-400'
     case 'green':  return 'border-t-emerald-500'
     case 'purple': return 'border-t-fuchsia-500'
     case 'teal':   return 'border-t-teal-400'
-    default:       return 'border-t-[#1D50A2]' // brand blue
+    default:       return 'border-t-[#1D50A2]'  // fallback = brand blue
   }
 }
 </script>
@@ -24,11 +25,9 @@ function topBorderColor(a?: Division['accent']) {
 <template>
   <article
     :class="[
-      // card
       'group relative flex flex-col h-full overflow-hidden rounded-[14px]',
       'bg-white dark:bg-gray-900',
       'shadow-[0_4px_24px_rgba(0,0,0,0.08)] hover:shadow-[0_10px_32px_rgba(0,0,0,0.12)] transition-shadow',
-      // SOLID header line as TOP BORDER (6px)
       'border-t-[6px]',
       topBorderColor(item.accent)
     ]"

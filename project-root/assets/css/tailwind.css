@@ -1,8 +1,57 @@
-/* tailwind.css */
+/* assets/css/tailwind.css */
 @import "tailwindcss";
 
-/* tokens.css (shared) - Merge or import if separate */
-:root {
+/* Swiper core + modules (import AFTER tailwind) */
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/pagination";
+
+/* Design tokens */
+:root{
   --brand-navy:#1D50A2; --brand-blue:#3EA1F1;
   --radius-card:12px; --radius-input:10px;
+}
+
+/* Related carousel: prevent page-level horizontal scroll */
+.related-swiper{
+  /* clip is stricter than hidden for fractional overflow */
+  overflow-x: clip;
+  position: relative;
+}
+
+/* Swiper itself should not overflow horizontally */
+.related-swiper .swiper{
+  overflow: hidden;
+}
+
+/* Optional: tame any sub-pixel “wiggle” from transforms */
+.related-swiper .swiper-wrapper{
+  will-change: transform;
+}
+
+/* Centered thin progress line (your previous style) */
+.related-swiper .rel-progress.swiper-pagination-progressbar{
+  position: static !important;
+  height: 6px;
+  max-width: 14rem;
+  margin: .75rem auto 0;
+  margin-top: 60px;
+  background: rgba(0,0,0,.08);
+  border-radius: 9999px;
+}
+.related-swiper .rel-progress .swiper-pagination-progressbar-fill{
+  background: var(--brand-navy, #1D50A2);
+  border-radius: 9999px;
+}
+.dark .related-swiper .rel-progress.swiper-pagination-progressbar{
+  background: rgba(255,255,255,.12);
+}
+/* Spacing tweaks at breakpoints */
+@media (min-width: 640px){
+  .related-swiper{ padding-bottom: 2.25rem; }
+  .related-swiper .rel-progress.swiper-pagination-progressbar{ height: 6px; }
+}
+@media (min-width: 768px){
+  .related-swiper{ padding-bottom: 2.5rem; }
+  .related-swiper .rel-progress.swiper-pagination-progressbar{ width: clamp(180px, 28vw, 360px); }
 }

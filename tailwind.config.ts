@@ -8,6 +8,7 @@ export default <Partial<Config>>{
     './project-root/pages/**/*.{vue,js,ts}',
     './project-root/plugins/**/*.{js,ts}',
   ],
+  afelist: ['border-t-[#1D50A2]'],
   darkMode: 'class',  // Recommended for theme support
   theme: {
     container: { center: true, padding: '1rem' },
