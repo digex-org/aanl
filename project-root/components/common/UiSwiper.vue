@@ -121,7 +121,7 @@ onMounted(() => {
       <!-- Centered, clickable progress line -->
       <div v-if="showProgress" class="mt-6 flex justify-center">
         <div
-          class="ui-swiper__progress swiper-pagination w-full h-[3px]"
+          class="ui-swiper__progress swiper-pagination w-full  rounded-full cursor-pointer "
           :class="progressMaxWidthClass"
           @click="onProgressClick"
         ></div>
@@ -135,7 +135,7 @@ onMounted(() => {
 :global(.ui-swiper .swiper-pagination-progressbar) {
   position: relative; /* keep it in flow, not overlayed */
   width: 100%;
-  height: 3px;
+  height: 6px;
   border-radius: 9999px;
   background-color: rgb(229 231 235 / 0.6); /* gray-200/60 */
 }
