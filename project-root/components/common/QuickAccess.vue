@@ -48,6 +48,8 @@ function linkAttrs(i: QuickAccessItem) {
   if (i.href) return { isExternal: true, href: i.href, target: '_blank', rel: 'noopener' }
   return {}
 }
+
+
 </script>
 
 <template>
