@@ -14,6 +14,7 @@ import {
 
 import NewsFilterBar from '~/components/news/NewsFilterBar.vue'
 import NewsCard from '~/components/news/NewsCard.vue'
+import AppBreadcrumbs from '~/components/ui/AppBreadcrumbs.vue'
 
 /* ---------- Route / division ---------- */
 const route = useRoute()
@@ -171,37 +172,10 @@ function onOpenDate() {
       <div class="absolute inset-0">
         <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 pt-5 sm:pt-6">
           <!-- Breadcrumb -->
-          <nav aria-label="Breadcrumb">
-            <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-              <li
-                v-for="(c, i) in crumbs"
-                :key="i"
-                class="flex items-center"
-              >
-                <NuxtLink
-                  v-if="c.to"
-                  :to="c.to"
-                  class="text-white/80 hover:text-white hover:underline"
-                >
-                  {{ c.label }}
-                </NuxtLink>
-                <span
-                  v-else
-                  class="text-white font-medium"
-                  aria-current="page"
-                >
-                  {{ c.label }}
-                </span>
-                <span
-                  v-if="i < crumbs.length - 1"
-                  class="mx-2 text-white/70 select-none"
-                  aria-hidden="true"
-                >
-                  ›
-                </span>
-              </li>
-            </ol>
-          </nav>
+         <AppBreadcrumbs
+          :items="crumbs"
+          variant="light-on-dark"
+        />
 
           <!-- Title -->
           <div class="mt-28 sm:mt-24 h-full flex items-end pb-4 sm:pb-8">

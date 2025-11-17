@@ -9,11 +9,12 @@ useHead({
 <template>
   <!-- Hero / banner just for testing visual rhythm -->
   <SectionsHeroSection /> 
-  <SectionsDivisionsSection class="mt-2" />
-  <SectionsUpcomingEvents
-      :events="myEventsFromApi"   
-      all-href="/events"
-   />
+  <SectionsDivisionsGrid />
+  <!-- Upcoming events -->
+    <SectionsUpcomingEvents
+    section-bg-class="border rounded-xl border-white/10"          
+    />
+
    <SectionsNewsSection class="mt-2" />
    <SectionsPartnersSection class="mt-2" />
    <SectionsHistoricalOverviewSection 

@@ -7,7 +7,7 @@ import { useHead } from '#imports'
 import { useBreadcrumbs } from '~/composables/useBreadcrumbs'
 import { divisions, type Division } from '~/data/divisions'
 import UiSwiper from '~/components/common/UiSwiper.vue'
-
+import AppBreadcrumbs from '~/components/ui/AppBreadcrumbs.vue'
 /* ---------- Route / entity ---------- */
 const route = useRoute()
 const slug = computed(() => String(route.params.slug || ''))
@@ -104,17 +104,10 @@ const relatedBreakpoints = {
       <div class="absolute inset-0">
         <!-- breadcrumb (top-left) -->
         <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 pt-5 sm:pt-6">
-          <nav aria-label="Breadcrumb">
-            <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-              <li v-for="(c, i) in crumbs" :key="i" class="flex items-center">
-                <NuxtLink v-if="c.to" :to="c.to" class="text-white/80 hover:text-white hover:underline">
-                  {{ c.label }}
-                </NuxtLink>
-                <span v-else class="text-white font-medium" aria-current="page">{{ c.label }}</span>
-                <span v-if="i < crumbs.length - 1" class="mx-2 text-white/70 select-none" aria-hidden="true">›</span>
-              </li>
-            </ol>
-          </nav>
+        <AppBreadcrumbs
+          :items="crumbs"
+          variant="light-on-dark"
+        />
 
           <!-- title aligned to bottom-left -->
           <div class="mt-28 sm:mt-24 h-full flex items-end pb-4 sm:pb-8">
