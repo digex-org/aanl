@@ -1,6 +1,7 @@
 <!-- components/news/NewsFilterBar.vue -->
 <script setup lang="ts">
 import { computed } from 'vue'
+import IconIvent from '../icons/IconIvent.vue';
 
 const props = withDefaults(defineProps<{
   /** v-model:search */
@@ -44,16 +45,16 @@ const categoryModel = computed({
 </script>
 
 <template>
-  <div class="space-y-4">
+  <div class="space-y-4 mb-10">
     <!-- Top bar: search + type + date + apply -->
     <div
-      class="rounded-[20px] bg-white text-gray-900 shadow-xl ring-1 ring-black/5
+      class="rounded-xs  bg-white text-gray-900  ring-1 ring-black/5
              px-4 sm:px-6 py-3 sm:py-4 flex flex-col gap-3 sm:flex-row sm:items-center"
     >
       <!-- Search -->
-      <div class="flex-1 flex items-center gap-3">
+      <div class="flex-1  flex items-center gap-3">
         <div
-          class="inline-flex items-center gap-2 rounded-full border border-gray-200
+          class="inline-flex items-center gap-2 rounded-xs border border-gray-200
                  px-3 py-1.5 w-full sm:max-w-md"
         >
           <svg viewBox="0 0 20 20" class="size-4 text-gray-400" aria-hidden="true">
@@ -71,7 +72,7 @@ const categoryModel = computed({
         <!-- Type select (only "News" for now, but ready for more) -->
         <div class="hidden sm:flex items-center">
           <div
-            class="inline-flex items-center gap-2 rounded-full border border-gray-200
+            class="inline-flex litems-center gap-56 rrounded-xs border border-gray-200
                    px-3 py-1.5 text-sm text-gray-700 cursor-default"
           >
             <span>{{ typeModel }}</span>
@@ -81,10 +82,7 @@ const categoryModel = computed({
             </svg>
           </div>
         </div>
-      </div>
-
-      <!-- Right side: date & apply -->
-      <div class="flex items-center justify-between sm:justify-end gap-3">
+         <!-- Right side: date & apply -->
         <button
           type="button"
           class="inline-flex items-center justify-center size-9 rounded-full border border-gray-200
@@ -92,13 +90,15 @@ const categoryModel = computed({
           aria-label="Open date filter"
           @click="emit('open-date')"
         >
-          <svg viewBox="0 0 20 20" class="size-4" aria-hidden="true">
-            <rect x="3" y="4" width="14" height="13" rx="2"
-                  stroke="currentColor" stroke-width="1.6" />
-            <path d="M7 2v4M13 2v4M4 9h12"
-                  stroke="currentColor" stroke-width="1.6" />
-          </svg>
+        <IconIvent
+         class="cursor-pointer"
+        />
         </button>
+      </div>
+
+     
+      <div class="flex items-center justify-between sm:justify-end gap-3">
+
 
         <button
           type="button"
@@ -116,10 +116,10 @@ const categoryModel = computed({
       <!-- "All" chip -->
       <button
         type="button"
-        class="px-3 py-1.5 rounded-full text-xs sm:text-sm border"
+        class="px-3 py-1.5 rounded-full cursor-pointer text-xs sm:text-sm border"
         :class="categoryModel === 'all'
-          ? 'bg-white text-gray-900 border-white'
-          : 'border-white/20 text-white/80 bg-transparent hover:bg-white/10'"
+          ? 'bg-[#1D50A2] text-white border-white'
+          : 'border-white/20 text-gray-900 bg-transparent hover:bg-white/10'"
         @click="categoryModel = 'all'"
       >
         All
@@ -130,10 +130,10 @@ const categoryModel = computed({
         v-for="cat in categories"
         :key="cat"
         type="button"
-        class="px-3 py-1.5 rounded-full text-xs sm:text-sm border"
+        class="px-3 py-1.5 cursor-pointer rounded-xs text-xs sm:text-sm border"
         :class="categoryModel === cat
-          ? 'bg-white text-gray-900 border-white'
-          : 'border-white/20 text-gray-900 bg-transparent hover:bg-white/10'"
+          ? 'bg-[#1D50A2] text-white border-white'
+          : 'border-white/20 text-gray-900 bg-[#EDF1F6] hover:bg-white/10'"
         @click="categoryModel = cat"
       >
         {{ cat }}
