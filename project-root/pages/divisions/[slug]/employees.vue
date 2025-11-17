@@ -8,6 +8,7 @@ import { useBreadcrumbs } from '~/composables/useBreadcrumbs'
 import { divisions, type Division } from '~/data/divisions'
 import { getDivisionEmployees, type Employee } from '~/data/division-employees'
 import AppBreadcrumbs from '~/components/ui/AppBreadcrumbs.vue'
+import PersonCard from '~/components/people/PersonCard.vue'
 
 /* ---------- Route / entity ---------- */
 const route = useRoute()
@@ -103,98 +104,22 @@ const qaItems = computed(() => [
     </section>
 
     <!-- Content -->
-    <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+     <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
         <!-- Employees grid -->
         <div class="lg:col-span-8">
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            <article
+            <PersonCard
               v-for="p in employees"
               :key="p.id"
-              class="rounded-xl bg-white dark:bg-gray-900 ring-1 ring-black/5 dark:ring-white/10 shadow-sm overflow-hidden"
-            >
-              <div class="aspect-[4/3] overflow-hidden">
-                <img
-                  :src="employeePhotoSrc(p.photo)"
-                  :alt="p.name"
-                  class="w-full h-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-
-              <div class="p-4">
-                <h3 class="text-[15px] font-semibold text-[gray-900] dark:text-white leading-snug">
-                  {{ p.name }}
-                </h3>
-
-                <p
-                  v-if="p.role"
-                  class="mt-1 text-[13px] text-[#1D50A2] dark:text-gray-300 leading-snug"
-                >
-                  {{ p.role }}
-                </p>
-
-                <p
-                  v-if="p.credentials"
-                  class="mt-2 text-[13px] text-gray-600 dark:text-gray-400 leading-snug"
-                >
-                  {{ p.credentials }}
-                </p>
-
-                <!-- Socials -->
-                <div class="mt-3 flex items-center gap-3">
-                  <!-- Email -->
-                  <a
-                    v-if="p.email"
-                    :href="`mailto:${p.email}`"
-                    class="inline-flex"
-                    :aria-label="`Email ${p.name}`"
-                  >
-                    <svg viewBox="0 0 24 24" class="size-4 text-[#1D50A2] dark:text-gray-300">
-                      <path
-                        fill="currentColor"
-                        d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 2v.01L12 12l8-5.99V6H4zm0 3.24V18h16V9.24l-7.35 5.5a1.5 1.5 0 0 1-1.7 0L4 9.24z"
-                      />
-                    </svg>
-                  </a>
-
-                  <!-- LinkedIn -->
-                  <a
-                    v-if="p.linkedin"
-                    :href="p.linkedin"
-                    target="_blank"
-                    rel="noopener"
-                    class="inline-flex"
-                    aria-label="LinkedIn"
-                  >
-                    <svg viewBox="0 0 24 24" class="size-6 text-[#1D50A2] dark:text-gray-300">
-                      <path
-                        fill="currentColor"
-                        d="M6.94 6.5A1.44 1.44 0 1 1 5.5 5.06 1.44 1.44 0 0 1 6.94 6.5zM6 8.5h2v9H6zM10 8.5h2v1.3h.03a2.2 2.2 0 0 1 1.97-1.08c2.11 0 2.5 1.39 2.5 3.2V17.5h-2v-4.12c0-.98-.02-2.24-1.37-2.24-1.37 0-1.58 1.07-1.58 2.17v4.19h-2z"
-                      />
-                    </svg>
-                  </a>
-
-                  <!-- Facebook -->
-                  <a
-                    v-if="p.facebook"
-                    :href="p.facebook"
-                    target="_blank"
-                    rel="noopener"
-                    class="inline-flex"
-                    aria-label="Facebook"
-                  >
-                    <svg viewBox="0 0 24 24" class="size-5 text-[#1D50A2] dark:text-gray-300">
-                      <path
-                        fill="currentColor"
-                        d="M13 22v-8h3l.5-3H13V9.5c0-.9.3-1.5 1.8-1.5H17V5.1c-.9-.1-1.8-.1-2.7-.1C11.7 5 10 6.4 10 9v2H7v3h3v8z"
-                      />
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            </article>
+              :name="p.name"
+              :role="p.role"
+              :credentials="p.credentials"
+              :photo-src="employeePhotoSrc(p.photo)"
+              :email="p.email"
+              :linkedin="p.linkedin"
+              :facebook="p.facebook"
+            />
           </div>
 
           <!-- Empty state -->
@@ -218,6 +143,7 @@ const qaItems = computed(() => [
         </aside>
       </div>
     </section>
+
   </div>
 
   <!-- 404-ish -->
