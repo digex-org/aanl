@@ -1,33 +1,37 @@
 <!-- components/about/AboutIntroSection.vue -->
 <script setup lang="ts">
-const introText = `
-The A. I. Alikhanyan National Science Laboratory (AANL), also known as the Yerevan Physics Institute, is Armenia's premier research institution dedicated to advancing the frontiers of physics and related disciplines. ...
+const text = `
+The A. I. Alikhanyan National Science Laboratory (AANL), also known as the Yerevan Physics Institute, is Armenia's premier research institution dedicated to advancing the frontiers of physics and related disciplines. Established in 1943 by brothers Artem and Abraham Alikhanyan, AANL has been at the forefront of scientific discovery, contributing significantly to both national and international scientific communities.
 `.trim()
 
-const heroImage = new URL('/assets/images/about/about-chalkboard.webp', import.meta.url).href
+const img = new URL('~/assets/images/about/about-chalkboard.webp', import.meta.url).href
 </script>
 
 <template>
-  <section class="grid grid-cols-1 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.9fr)] gap-10 items-start">
-    <div>
-      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">
-        About
-      </h1>
-      <p class="mt-5 text-sm sm:text-[15px] leading-relaxed text-gray-700 dark:text-gray-200 whitespace-pre-line">
-        {{ introText }}
-      </p>
+  <section class="space-x-6 space-y-6 container">
+
+    <!-- Title -->
+    <h1 class="inline-block text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white
+                 relative after:content-[''] after:block after:h-[3px] after:bg-gray-900 after:rounded-full after:mt-2"">
+      About
+    </h1>
+
+    <!-- Paragraph -->
+    <p class="text-[15px] leading-relaxed text-gray-700 dark:text-gray-300 whitespace-pre-line">
+      {{ text }}
+    </p>
+
+    <!-- Image -->
+    <div class="mt-6 overflow-hidden rounded-3xl shadow-lg ring-1 ring-black/5 dark:ring-white/10">
+      <img
+       :src="img"
+        alt="About AANL"
+        class="w-full h-auto object-cover"
+        loading="lazy"
+        decoding="async"
+      />
     </div>
 
-    <div class="max-w-md lg:ml-auto">
-      <div class="overflow-hidden rounded-3xl shadow-md ring-1 ring-black/5">
-        <img
-          :src="heroImage"
-          alt="Scientific formulas on board"
-          class="w-full h-full object-cover"
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-    </div>
   </section>
 </template>
+
