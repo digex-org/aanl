@@ -131,12 +131,20 @@ function onOpenDate() {
 </script>
 
 <template>
-  <div class="min-h-screen text-gray-900 dark:bg-gray-950">
+  <div class="min-h-screen container px-4 sm:px-6 lg:px-8 text-gray-900 dark:bg-gray-950">
     <!-- Page title -->
     <header class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10 pb-4">
-      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
-        News
-      </h1>
+      <div class="flex items-center justify-between gap-4 mb-6 sm:mb-8">
+        <h2
+            id="contact-title"
+            class="inline-block text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white
+                relative
+                after:content-[''] after:block after:h-[3px] after:bg-gray-900 after:rounded-full after:mt-2"
+        >
+            News
+        </h2>
+
+      </div>
     </header>
 
     <!-- Filter bar -->
@@ -151,14 +159,15 @@ function onOpenDate() {
         @open-date="onOpenDate"
       />
     </section>
-
-    <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-6 pb-12">
-      <!-- Hero slider -->
+       <!-- Hero slider -->
       <section v-if="hasNews && heroNews.length" class="grid grid-cols-1 gap-6">
         <div>
           <NewsHeroSlider :items="heroNews" />
         </div>
       </section>
+
+    <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-6 pb-12">
+
 
       <!-- Remaining news grid -->
       <section
@@ -191,10 +200,15 @@ function onOpenDate() {
          No news found for this filter.
       </p>
       <!-- Upcoming events -->
-      <SectionsUpcomingEvents
-        class="mt-12 text-white bg-[#0B1843]"
-        all-href="/events"
-      />
+        <SectionsUpcomingEvents
+        section-bg-class="bg-[#0B1843] mt-20   border rounded-xl border-white/10"          
+        title-class="text-white"            
+          all-button-class="
+            text-white border-2 border-white/40 px-4 py-1.5 
+            bg-[#0B1843] hover:bg-[#1D50A2] hover:text-white
+            focus-visible:ring-orange-500
+        "
+        />
 
 
       <!-- Empty state -->
