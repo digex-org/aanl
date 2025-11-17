@@ -57,7 +57,6 @@ function topAccent(accent?: EventItem['accent'], i?: number) {
   <section class="dark:bg-gray-950" aria-labelledby="events-title">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-20">
       <!-- Heading -->
-      <!-- Heading -->
       <div class="mb-6 sm:mb-8 flex items-center justify-between">
         <!-- Left: title + counter -->
 
@@ -97,7 +96,7 @@ function topAccent(accent?: EventItem['accent'], i?: number) {
         aria-label="Upcoming events list">
         <article v-for="(ev, i) in items" :key="ev.id" role="listitem" :class="[
           'relative min-w-[82%] xs:min-w-[70%] sm:min-w-0',
-          'rounded-2xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-gray-900',
+          'rounded-xl  bg-white dark:bg-gray-900',
           'shadow-[0_1px_2px_rgba(0,0,0,0.05)] transition hover:shadow-lg hover:-translate-y-0.5',
           'snap-start',
           'before:absolute before:inset-x-0 before:top-0 before:h-[6px] before:rounded-t-2xl',

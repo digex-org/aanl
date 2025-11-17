@@ -1,13 +1,21 @@
 <!-- pages/divisions/[slug]/news.vue -->
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useHead } from '#imports'
 
 import { useBreadcrumbs } from '~/composables/useBreadcrumbs'
 import { divisions, type Division } from '~/data/divisions'
-import { getDivisionNews, type NewsItem } from '~/data/news'
+import {
+  getAllNews,
+  type NewsItem,
+  type NewsCategory
+} from '~/data/news'
 
+import NewsFilterBar from '~/components/news/NewsFilterBar.vue'
+import NewsCard from '~/components/news/NewsCard.vue'
+
+/* ---------- Route / division ---------- */
 const route = useRoute()
 const slug = computed(() => String(route.params.slug || ''))
 
@@ -15,7 +23,7 @@ const division = computed<Division | undefined>(() =>
   divisions.find(d => d.slug === slug.value)
 )
 
-/* breadcrumbs reusing your helper */
+/* ---------- Breadcrumbs / SEO ---------- */
 const { crumbs, jsonLd } = useBreadcrumbs({
   segmentLabels: { divisions: 'Divisions' },
   currentLabel: division.value?.title ?? null
@@ -25,10 +33,15 @@ useHead(() => ({
   title: division.value
     ? `${division.value.title} — News — AANL`
     : 'Division — News — AANL',
-  script: [{ type: 'application/ld+json', children: JSON.stringify(jsonLd.value) }]
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify(jsonLd.value)
+    }
+  ]
 }))
 
-/* banner image same as division page */
+/* ---------- Banner image (reuse division image) ---------- */
 const bannerMods = import.meta.glob('~/assets/images/divisions/*', {
   eager: true,
   import: 'default'
@@ -42,12 +55,49 @@ const bannerSrc = computed(() =>
   division.value ? bannerByFile[division.value.image] || '' : ''
 )
 
-/* news for this division */
-const news = computed<NewsItem[]>(() =>
-  division.value ? getDivisionNews(division.value.slug) : []
-)
+/* ---------- Raw news + division-scoped news ---------- */
+const allNews = computed<NewsItem[]>(() => getAllNews())
 
-/* news images */
+/**
+ * News that belong to the current division.
+ * NOTE: news.divisionSlug must equal division.slug exactly.
+ */
+const divisionNews = computed<NewsItem[]>(() => {
+  if (!division.value) return []
+  return allNews.value.filter(n => n.divisionSlug === division.value!.slug)
+})
+
+/* ---------- Filters (same categories as global /news) ---------- */
+const categories = [
+  'Conference',
+  'Education',
+  'Events',
+  'Partners',
+  'Research',
+  'Science',
+  'Library',
+  'International relations'
+] as const
+
+type Category = (typeof categories)[number] | Extract<NewsCategory, 'Other'>
+
+const search = ref('')
+const selectedCategory = ref<'all' | Category>('all')
+
+/**
+ * Type options for this page:
+ * - "division": only news of this division
+ * - "all": all AANL news (still filtered by category/search)
+ */
+const typeOptions = [
+  { value: 'division', label: 'This division' },
+  { value: 'all',      label: 'All AANL news' }
+] as const
+
+type TypeValue = (typeof typeOptions)[number]['value']
+const selectedType = ref<TypeValue>('division')
+
+/* ---------- Image helper for cards ---------- */
 const coverMods = import.meta.glob('~/assets/images/news/*', {
   eager: true,
   import: 'default'
@@ -61,34 +111,73 @@ function coverSrc(file: string): string {
   return coverByFile[file] || file
 }
 
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
-}
+/* ---------- Filtered list (scope + category + search) ---------- */
 
-/* QuickAccess items – same pattern as other division subpages */
+/** First decide scope: all AANL news vs only this division. */
+const scopedNews = computed<NewsItem[]>(() =>
+  selectedType.value === 'all' ? allNews.value : divisionNews.value
+)
+
+/** Then apply category + search filters on top. */
+const filteredNews = computed<NewsItem[]>(() => {
+  const q = search.value.trim().toLowerCase()
+
+  return scopedNews.value.filter((n) => {
+    const matchesCategory =
+      selectedCategory.value === 'all' || n.category === selectedCategory.value
+
+    const matchesSearch =
+      !q ||
+      n.title.toLowerCase().includes(q) ||
+      n.excerpt.toLowerCase().includes(q)
+
+    return matchesCategory && matchesSearch
+  })
+})
+
+const hasNews = computed(() => filteredNews.value.length > 0)
+
+/* ---------- QuickAccess items ---------- */
 const qaItems = computed(() => [
   { key: 'employees', label: 'Employees', to: `/divisions/${slug.value}/employees` },
   { key: 'news',      label: 'News',      to: `/divisions/${slug.value}/news` },
   { key: 'seminars',  label: 'Seminars',  to: `/divisions/${slug.value}/seminars` }
 ])
+
+/* ---------- Optional hooks from filter bar ---------- */
+function onApply() {
+  // Good place later for analytics or scroll-to-top
+}
+
+function onOpenDate() {
+  // Future: open date picker, etc.
+}
 </script>
 
 <template>
   <div v-if="division" class="dark:bg-gray-950">
-    <!-- Banner (same as other division pages) -->
+    <!-- Banner -->
     <section class="relative isolate overflow-hidden">
-      <img :src="bannerSrc" :alt="division.title" class="w-full h-[240px] sm:h-[300px] lg:h-[360px] object-cover" />
-      <div class="absolute inset-0 bg-[linear-gradient(0deg,rgba(0,0,0,0.55),rgba(0,0,0,0.25))]"></div>
+      <img
+        :src="bannerSrc"
+        :alt="division.title"
+        class="w-full h-[240px] sm:h-[300px] lg:h-[360px] object-cover"
+      />
+      <div
+        class="absolute inset-0
+               bg-[linear-gradient(0deg,rgba(0,0,0,0.55),rgba(0,0,0,0.25))]"
+      />
 
       <div class="absolute inset-0">
         <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 pt-5 sm:pt-6">
+          <!-- Breadcrumb -->
           <nav aria-label="Breadcrumb">
             <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-              <li v-for="(c, i) in crumbs" :key="i" class="flex items-center">
+              <li
+                v-for="(c, i) in crumbs"
+                :key="i"
+                class="flex items-center"
+              >
                 <NuxtLink
                   v-if="c.to"
                   :to="c.to"
@@ -107,11 +196,14 @@ const qaItems = computed(() => [
                   v-if="i < crumbs.length - 1"
                   class="mx-2 text-white/70 select-none"
                   aria-hidden="true"
-                >›</span>
+                >
+                  ›
+                </span>
               </li>
             </ol>
           </nav>
 
+          <!-- Title -->
           <div class="mt-28 sm:mt-24 h-full flex items-end pb-4 sm:pb-8">
             <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
               {{ division.title }} — News
@@ -124,43 +216,40 @@ const qaItems = computed(() => [
     <!-- Content -->
     <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
-        <!-- News list -->
-        <div class="lg:col-span-8 space-y-4">
-          <article
-            v-for="n in news"
-            :key="n.id"
-            class="rounded-2xl bg-white dark:bg-gray-900 shadow-md ring-1 ring-black/5 dark:ring-white/10 overflow-hidden"
-          >
-            <NuxtLink :to="`/news/${n.slug}`" class="block h-full">
-              <div class="h-40 sm:h-44 overflow-hidden">
-                <img
-                  :src="coverSrc(n.coverImage)"
-                  :alt="n.title"
-                  class="h-full w-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-              <div class="px-4 pb-4 pt-3 text-gray-900 dark:text-white">
-                <p class="text-[11px] uppercase tracking-wide text-gray-500">
-                  {{ formatDate(n.date) }}
-                </p>
-                <h2 class="mt-1 text-sm sm:text-base font-semibold leading-snug">
-                  {{ n.title }}
-                </h2>
-                <p class="mt-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
-                  {{ n.excerpt }}
-                </p>
-              </div>
-            </NuxtLink>
-          </article>
+        <!-- Left: Filter + news list -->
+        <div class="lg:col-span-8">
+          <NewsFilterBar
+            v-model:search="search"
+            v-model:type="selectedType"
+            v-model:category="selectedCategory"
+            :categories="categories"
+            :types="typeOptions"
+            @apply="onApply"
+            @open-date="onOpenDate"
+          />
 
-          <p v-if="!news.length" class="text-gray-600 dark:text-gray-300 text-sm">
+          <!-- News cards -->
+          <section
+            v-if="hasNews"
+            class="grid grid-cols-1 sm:grid-cols-2 gap-5"
+          >
+            <NewsCard
+              v-for="n in filteredNews"
+              :key="n.id"
+              :item="n"
+              :image-src="coverSrc(n.coverImage)"
+            />
+          </section>
+
+          <p
+            v-else
+            class="mt-6 text-sm text-gray-600 dark:text-gray-300"
+          >
             No news has been published for this division yet.
           </p>
         </div>
 
-        <!-- Quick Access -->
+        <!-- Right: Quick Access -->
         <aside class="lg:col-span-4">
           <CommonQuickAccess
             :items="qaItems"
@@ -174,11 +263,15 @@ const qaItems = computed(() => [
     </section>
   </div>
 
+  <!-- Fallback if division not found -->
   <div v-else class="mx-auto max-w-3xl px-4 py-16 text-center">
     <h1 class="text-2xl font-semibold">Division not found</h1>
     <p class="mt-2 text-gray-600">
       Please check the URL or return to the
-      <NuxtLink to="/divisions" class="text-[--brand-navy] hover:underline">Divisions</NuxtLink> page.
+      <NuxtLink to="/divisions" class="text-[--brand-navy] hover:underline">
+        Divisions
+      </NuxtLink>
+      page.
     </p>
   </div>
 </template>
