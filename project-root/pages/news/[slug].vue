@@ -71,7 +71,7 @@ useHead(() => ({
       </div>
 
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-        <div class="overflow-hidden rounded-3xl shadow-lg ring-1 ring-black/5">
+        <div class="overflow-hidden rounded-xl shadow-lg ring-1 ring-black/5">
           <img
             :src="imgSrc(item.coverImage)"
             :alt="item.title"
@@ -87,7 +87,11 @@ useHead(() => ({
     <!-- Article body -->
     <main class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pb-12">
       <article
-        class="-mt-10 sm:-mt-16 relative z-10 rounded-3xl bg-white dark:bg-gray-900 shadow-xl ring-1 ring-black/5 dark:ring-white/10 px-4 sm:px-8 lg:px-10 py-6 sm:py-8"
+        class="mx-auto max-w-3xl lg:max-w-4xl -mt-10 sm:-mt-14 lg:-mt-16
+               relative z-10
+               rounded-3xl bg-white dark:bg-gray-900
+               shadow-xl ring-1 ring-black/5 dark:ring-white/10
+               px-4 sm:px-8 lg:px-10 py-6 sm:py-8 lg:py-10"
       >
         <p class="text-[11px] uppercase tracking-wide text-gray-500">
           {{ formatDate(item.date) }}

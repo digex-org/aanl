@@ -95,7 +95,7 @@ const heroSrc = computed(() => imgSrc(props.heroImageFile))
 </script>
 
 <template>
-  <section class="bg-[#F3F4F6] dark:bg-gray-950">
+  <section class="dark:bg-gray-950">
     <!-- Breadcrumbs row (above hero) -->
     <div class="mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
       <AppBreadcrumbs
@@ -105,11 +105,11 @@ const heroSrc = computed(() => imgSrc(props.heroImageFile))
     </div>
 
     <!-- Hero banner -->
-    <div class="relative mt-4 isolate overflow-hidden bg-gray-900">
+    <div class="relative  mt-4 isolate overflow-hidden rounded-xl bg-gray-900">
       <img
         :src="heroSrc"
         :alt="heroTitle"
-        class="w-full h-[260px] sm:h-[320px] lg:h-[680px] object-cover"
+        class="w-full h-[500px] sm:h-5380px] lg:h-[580px] object-cover"
         loading="eager"
         decoding="async"
         fetchpriority="high"
@@ -122,7 +122,7 @@ const heroSrc = computed(() => imgSrc(props.heroImageFile))
       />
 
       <!-- Title only (bottom-left) -->
-      <div class="absolute inset-0">
+      <div class="absolute inset-0 mb-50">
         <div class="mx-auto flex h-full max-w-7xl items-end px-4 pb-6 sm:px-6 sm:pb-8 lg:px-8">
           <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
             {{ heroTitle }}

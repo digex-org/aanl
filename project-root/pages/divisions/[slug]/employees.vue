@@ -96,6 +96,7 @@ const qaItems = computed(() => [
 
           <div class="mt-28 sm:mt-24 h-full flex items-end pb-4 sm:pb-8">
             <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+              
               {{ division.title }} — Employees
             </h1>
           </div>
