@@ -3,6 +3,8 @@
 import AboutIntroSection from '~/components/about/AboutIntroSection.vue'
 import AboutMissionVisionSection from '~/components/about/AboutMissionVisionSection.vue'
 import AboutHistorySection from '~/components/about/AboutHistorySection.vue'
+import AboutDirectorateSection from '~/components/about/AboutDirectorateSection.vue'
+import AboutNumbersSection from '~/components/sections/AboutNumbersSection.vue'
 
 useHead({ title: 'About — AANL' })
 </script>
@@ -27,6 +29,8 @@ useHead({ title: 'About — AANL' })
 
       </div>
       <AboutHistorySection  />
+      <AboutDirectorateSection class="mt-12 lg:mt-16" />
+      <AboutNumbersSection class="mt-12 lg:mt-16" />
     </main>
   </div>
 </template>

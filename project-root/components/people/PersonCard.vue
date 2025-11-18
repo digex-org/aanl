@@ -28,7 +28,7 @@ const isCompact = computed(() => props.variant === 'compact')
     class="rounded-xl bg-white dark:bg-gray-900 ring-1 ring-black/5 dark:ring-white/10 shadow-sm overflow-hidden"
   >
     <!-- Photo -->
-    <div :class="['overflow-hidden', isCompact ? 'aspect-square' : 'aspect-[4/3]']">
+    <div :class="['overflow-hidden', isCompact ? 'aspect-square' : 'aspect-4/4']">
       <img
         :src="photoSrc"
         :alt="name"
