@@ -11,34 +11,39 @@ useHead({ title: 'Seminars — AANL' })
 const allSeminars = computed<SeminarItem[]>(() => getAllSeminars())
 
 const search = ref('')
-const selectedType = ref('seminars')
+const selectedType = ref<'all' | string>('all')
 const selectedTopic = ref<'all' | string>('all')
 
 const typeOptions = [
-  { value: 'seminars', label: 'Seminars' },
-  { value: 'cosmology', label: 'Cosmology' },
+  { value: 'all',        label: 'All events' },
+  { value: 'seminar',    label: 'Seminars' },
+  { value: 'school',     label: 'Schools' },
+  { value: 'conference', label: 'Conferences' }
 ] as const
 
 const topicOptions = [
-  { value: 'all', label: 'Any topics' },
+  { value: 'all',              label: 'Any topics' },
   { value: 'particle-physics', label: 'Particle physics' },
-  { value: 'cosmology', label: 'Cosmology' },
-  // ...
+  { value: 'cosmology',        label: 'Cosmology' },
+  // …
 ] as const
 
 const filtered = computed(() => {
   const q = search.value.trim().toLowerCase()
 
-  return allSeminars.value.filter(item => {
+  return allSeminars.value.filter((item) => {
+    const matchesType =
+      selectedType.value === 'all' || item.type === selectedType.value
+
     const matchesTopic =
       selectedTopic.value === 'all' || item.topic === selectedTopic.value
 
     const matchesSearch =
       !q ||
       item.title.toLowerCase().includes(q) ||
-      item.excerpt.toLowerCase().includes(q)
+      (item.excerpt ?? '').toLowerCase().includes(q)
 
-    return matchesTopic && matchesSearch
+    return matchesType && matchesTopic && matchesSearch
   })
 })
 
@@ -54,12 +59,16 @@ function onOpenDate() {
 </script>
 
 <template>
-  <div class="min-h-screen ">
+  <div class="min-h-screen">
     <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16">
       <header class="mb-5">
-        <h1 class="inline-block text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white
-                relative
-                after:content-[''] after:block after:h-[3px] after:bg-gray-900 after:rounded-full after:mt-2">Seminars</h1>
+        <h1
+          class="inline-block text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white
+                 relative
+                 after:content-[''] after:block after:h-[3px] after:bg-gray-900 after:rounded-full after:mt-2"
+        >
+          Seminars
+        </h1>
       </header>
 
       <SeminarsFilterBar
@@ -72,13 +81,11 @@ function onOpenDate() {
         @open-date="onOpenDate"
       />
 
-      <p class="mb-4 text-sm text-gray-600">
+      <p class="mb-4 text-sm text-gray-600 dark:text-gray-300">
         Showing {{ totalCount }} results
       </p>
 
-      <section
-        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
-      >
+      <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         <SeminarCard
           v-for="s in filtered"
           :key="s.id"

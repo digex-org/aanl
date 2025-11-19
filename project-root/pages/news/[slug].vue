@@ -75,7 +75,7 @@ useHead(() => ({
           <img
             :src="imgSrc(item.coverImage)"
             :alt="item.title"
-            class="w-full h-[260px] sm:h-[320px] lg:h-[380px] object-cover"
+            class="w-full h-[260px] sm:h-80 lg:h-[380px] object-cover"
             loading="eager"
             decoding="async"
             fetchpriority="high"

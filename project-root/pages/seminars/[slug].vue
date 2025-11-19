@@ -25,7 +25,6 @@ useHead(() => ({
 /* ---------- Breadcrumbs ---------- */
 const crumbs = computed<Crumb[]>(() => [
   { label: 'Home', to: '/' },
-  { label: 'Science', to: '/science' },
   { label: 'Seminars', to: '/seminars' },
   seminar.value
     ? { label: seminar.value.title }

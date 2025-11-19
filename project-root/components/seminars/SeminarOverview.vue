@@ -72,7 +72,7 @@ function formatDate(iso: string): string {
                bg-[linear-gradient(180deg,rgba(0,0,0,0.55),rgba(0,0,0,0.35))]"
       />
 
-      <div class="absolute inset-0 mb-50 sm:mb-16">
+      <div class="absolute inset-0 mb-50 md:mb-36 sm:mb-16">
         <div class="mx-auto flex h-full max-w-7xl items-end px-4 pb-6 sm:px-6 sm:pb-8 lg:px-8">
           <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
             {{ heroTitle }}
