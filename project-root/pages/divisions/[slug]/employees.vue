@@ -47,7 +47,7 @@ const bannerSrc = computed(() =>
 )
 
 /* ---------- Employee photos from assets ---------- */
-const employeeMods = import.meta.glob('~/assets/images/employees/*', {
+const employeeMods = import.meta.glob('~/assets/images/partners/employees/*', {
   eager: true,
   import: 'default'
 }) as Record<string, string>
@@ -96,7 +96,7 @@ const qaItems = computed(() => [
 
           <div class="mt-28 sm:mt-24 h-full flex items-end pb-4 sm:pb-8">
             <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              
+
               {{ division.title }} — Employees
             </h1>
           </div>

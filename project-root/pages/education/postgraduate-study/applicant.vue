@@ -161,7 +161,7 @@ const cards: ApplicantCard[] = [
 
   
     <!-- GRID OF FOUR CARDS -->
-        <section class="mt-12 lg:mt-14">
+       <section class="mt-12 lg:mt-14">
         <div
             class="grid gap-8 lg:gap-10
                 grid-cols-1 md:grid-cols-2"
@@ -229,7 +229,7 @@ const cards: ApplicantCard[] = [
             </div>
             </article>
         </div>
-        </section>
+      </section>
 
     </main>
   </div>

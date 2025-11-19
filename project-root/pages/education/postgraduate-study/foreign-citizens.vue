@@ -15,7 +15,7 @@ useHead({ title: 'Application form — Postgraduate study — AANL' })
 const crumbs: Crumb[] = [
   { label: 'Home', to: '/' },
   { label: 'Education', to: '/education' },
-  { label: 'Postgraduate study', to: '/education/postgraduate-study/applicant' },
+  { label: 'foreign Citizens', to: '/education/postgraduate-study/foreign-citizens' },
   { label: 'Application form' }
 ]
 
@@ -75,7 +75,7 @@ const languageLines = [
       <!-- Tabs -->
       <PostgraduateTabs
         :items="POSTGRAD_TABS"
-        active-key="application-form"
+        active-key="foreign-citizens"
         class="mt-4"
       />
 
@@ -106,7 +106,7 @@ const languageLines = [
             <img
               :src="heroSrc"
               alt="Signing application form"
-              class="h-full w-full rounded-2xl object-cover"
+              class="h-full w-full object-cover"
               loading="lazy"
               decoding="async"
             />
@@ -198,7 +198,7 @@ const languageLines = [
 
             <!-- Image -->
             <div
-              class="rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-800
+              class="rounded-3xl overflow-hidden bg-gray-100 dark:bg-gray-800
                      shadow-sm ring-1 ring-black/5 dark:ring-white/10"
             >
               <img
