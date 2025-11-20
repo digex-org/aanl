@@ -146,6 +146,7 @@ useHead(() => ({
       <section class="bg-[#0B1843] mt-10 border rounded-xl border-white/10">
         <!-- Upcoming events (themed variant) -->
         <SectionsUpcomingEvents
+          title="Upcoming Events"
           section-bg-class="bg-[#0B1843] border rounded-xl"
           title-class="text-white"
           all-button-class="

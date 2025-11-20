@@ -10,10 +10,12 @@ useHead({
   <!-- Hero / banner just for testing visual rhythm -->
   <SectionsHeroSection /> 
   <SectionsDivisionsGrid />
-  <!-- Upcoming events -->
-    <SectionsUpcomingEvents
-    section-bg-class="border rounded-xl border-white/10"          
-    />
+  <!-- Upcoming events  title="Next conferences & seminars"-->
+<SectionsUpcomingEvents
+  :max-items="4"
+  :only-upcoming="true"
+/>
+
 
    <SectionsNewsSection class="mt-2" />
    <SectionsPartnersSection class="mt-2" />

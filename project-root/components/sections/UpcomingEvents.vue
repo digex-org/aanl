@@ -1,16 +1,9 @@
-<!-- components/sections/SectionsUpcomingEvents.vue (or your path) -->
+<!-- components/sections/SectionsUpcomingEvents.vue -->
 <script setup lang="ts">
 import { computed } from 'vue'
-
-type EventItem = {
-  id: string | number
-  title: string
-  href?: string
-  date: string        // ISO date, e.g. "2025-09-07T10:00:00+04:00"
-  time?: string       // e.g. "10:00–11:30"
-  blurb?: string      // optional short description
-  accent?: 'blue' | 'pink' | 'orange' | 'green'
-}
+import EventCard from '~/components/events/EventCard.vue'
+import { events as source } from '~/data/events'
+import type { EventItem } from '~/data/events'
 
 const props = withDefaults(defineProps<{
   title?: string
@@ -18,6 +11,7 @@ const props = withDefaults(defineProps<{
   events?: EventItem[]
   iconTo?: string
   iconLabel?: string
+  showCountBadge?: boolean
 
   /** Customizable: section background (default keeps current behavior) */
   sectionBgClass?: string
@@ -27,127 +21,102 @@ const props = withDefaults(defineProps<{
 
   /** Customizable: bottom "All Events" button colors (text/border/bg/hover/ring) */
   allButtonClass?: string
+
+  /** How many events to show (after sorting/filtering). 0 = no limit */
+  maxItems?: number
+
+  /** When true, prefer upcoming events (date >= today) */
+  onlyUpcoming?: boolean
 }>(), {
-  title: 'Upcoming events',
+  title: 'Upcoming Events',
   allHref: '/events',
   iconTo: '/events',
+  showCountBadge: true,
   iconLabel: 'Open events calendar',
   sectionBgClass: 'bg-transparent dark:bg-gray-950',
   titleClass: 'text-gray-900 dark:text-white',
   allButtonClass:
     'text-[#1D50A2] border-2 border-[#1D50A2] ' +
     'hover:bg-[#1D50A2] hover:text-white ' +
-    'focus-visible:ring-[#1D50A2]'
+    'focus-visible:ring-[#1D50A2]',
+  maxItems: 4,
+  onlyUpcoming: false
 })
 
-// --- Default demo data (replace with real API/CMS or pass via props) ---
-const demo: EventItem[] = [
-  {
-    id: 1,
-    title: 'Evolving Universe: Theory and Observations Starobinsky Memorial Conference',
-    date: '2025-09-07T10:00:00+04:00',
-    time: '10:00–11:30',
-    accent: 'blue'
-  },
-  {
-    id: 2,
-    title: '75th anniversary of prof. Norayr Akopov',
-    date: '2025-09-18T10:00:00+04:00',
-    time: '10:00–11:30',
-    accent: 'pink'
-  },
-  {
-    id: 3,
-    title: 'International Conference on Particle Physics and Cosmology dedicated to Prof. Rubakov memory',
-    date: '2025-09-29T10:00:00+04:00',
-    time: '10:00–11:30',
-    accent: 'orange'
-  },
-  {
-    id: 4,
-    title: 'VI Matinyan seminar',
-    date: '2025-10-04T10:00:00+04:00',
-    time: '10:00–11:30',
-    accent: 'green'
-  },
-]
-
-// Use provided events or fallback
-const items = computed<EventItem[]>(() =>
-  props.events?.length ? props.events : demo
+/**
+ * Base list:
+ * - if `events` prop provided → use that
+ * - otherwise fall back to global events dataset
+ */
+const rawList = computed<EventItem[]>(() =>
+  props.events?.length ? props.events : source
 )
 
-// Helpers
-const monthNames = [
-  'january',
-  'february',
-  'march',
-  'april',
-  'may',
-  'june',
-  'july',
-  'august',
-  'september',
-  'october',
-  'november',
-  'december'
-]
+const items = computed<EventItem[]>(() => {
+  let arr = [...rawList.value]
+  if (!arr.length) return []
 
-function parts(iso: string) {
-  const d = new Date(iso)
-  return {
-    day: String(d.getDate()),
-    month: monthNames[d.getMonth()]
-  }
-}
+  // Sort all events by date (ascending)
+  arr.sort((a, b) => {
+    const da = new Date(a.date).getTime()
+    const db = new Date(b.date).getTime()
+    return da - db
+  })
 
-// Map accent to Tailwind classes
-function topAccent(accent?: EventItem['accent'], i?: number) {
-  const c = accent ?? (['blue', 'pink', 'orange', 'green'] as const)[(i ?? 0) % 4]
-  switch (c) {
-    case 'pink':
-      return 'before:bg-gradient-to-r before:from-pink-500 before:to-rose-400'
-    case 'orange':
-      return 'before:bg-gradient-to-r before:from-orange-400 before:to-amber-400'
-    case 'green':
-      return 'before:bg-gradient-to-r before:from-emerald-400 before:to-teal-400'
-    default:
-      return 'before:bg-gradient-to-r before:from-[#1D50A2] before:to-blue-400'
+  const nowTs = Date.now()
+  let upcoming: EventItem[] = []
+
+  if (props.onlyUpcoming) {
+    upcoming = arr.filter(ev => {
+      const ts = new Date(ev.date).getTime()
+      return !Number.isNaN(ts) && ts >= nowTs
+    })
   }
-}
+
+  // If there are upcoming events, use them.
+  // If NOT, gracefully fall back to the sorted full list.
+  let finalList = props.onlyUpcoming && upcoming.length ? upcoming : arr
+
+  if (props.maxItems && props.maxItems > 0) {
+    finalList = finalList.slice(0, props.maxItems)
+  }
+
+  return finalList
+})
 </script>
 
 <template>
-  <!-- Section background is now configurable -->
+  <!-- Section background is configurable -->
   <section :class="sectionBgClass" aria-labelledby="events-title">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-20">
+    <div class="mx-auto  max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-20">
       <!-- Heading -->
       <div class="mb-6 sm:mb-8 flex items-center justify-between">
         <!-- Left: title + counter -->
-        <h2
+      <div class="mb-6 sm:mb-8">
+         <h2
           id="events-title"
           class="text-2xl sm:text-3xl font-bold tracking-tight"
-          :class="titleClass"
+       
         >
           <span
             class="relative inline-block
                    after:content-[''] after:block after:h-[3px]
                    after:bg-current after:rounded-full after:mt-2"
+                   :class="titleClass"
           >
             {{ title }}
           </span>
 
           <span
-            class="ml-2 inline-flex items-center justify-center
-                   w-5 h-5 rounded-full align-super
-                   bg-[#1D50A2] text-white text-[10px] font-semibold leading-none
-                   ring-2 ring-white dark:ring-gray-950"
-            aria-label="Total events"
-            title="Total events"
+           v-if="showCountBadge"
+              class="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full align-super bg-[#1D50A2] text-white text-[10px] font-semibold leading-none ring-2 ring-white dark:ring-gray-950"
+            aria-label="Total events shown"
+            title="Total events shown"
           >
             {{ items.length }}
           </span>
         </h2>
+      </div>
 
         <!-- Right: circular icon button -->
         <NuxtLink
@@ -175,58 +144,14 @@ function topAccent(accent?: EventItem['accent'], i?: number) {
         role="list"
         aria-label="Upcoming events list"
       >
-        <article
+        <div
           v-for="(ev, i) in items"
           :key="ev.id"
           role="listitem"
-          :class="[
-            'relative min-w-[82%] xs:min-w-[70%] sm:min-w-0',
-            'rounded-xl bg-white dark:bg-gray-900',
-            'shadow-[0_1px_2px_rgba(0,0,0,0.05)] transition hover:shadow-lg hover:-translate-y-0.5',
-            'snap-start',
-            'before:absolute before:inset-x-0 before:top-0 before:h-[6px] before:rounded-t-2xl',
-            topAccent(ev.accent, i)
-          ]"
+          class="relative min-w-[82%] xs:min-w-[70%] sm:min-w-0 snap-start"
         >
-          <div class="p-4 sm:p-5">
-            <!-- Date row -->
-            <div class="flex items-start gap-3">
-              <div class="rounded-md bg-[#1D50A2] text-white px-2.5 py-1 leading-none">
-                <span class="block text-base font-bold">
-                  {{ parts(ev.date).day }}
-                </span>
-              </div>
-              <div class="mt-0.5">
-                <div class="text-xs font-semibold uppercase tracking-wide text-[#1D50A2]">
-                  {{ parts(ev.date).month }}
-                </div>
-                <div class="text-[11px] text-gray-500 dark:text-gray-400">
-                  {{ ev.time || '' }}
-                </div>
-              </div>
-            </div>
-
-            <hr class="my-3 border-gray-200/80 dark:border-white/10" />
-
-            <!-- Title -->
-            <h3 class="text-[17px] leading-snug font-semibold text-gray-900 dark:text-gray-100">
-              <NuxtLink
-                :to="ev.href || '#'"
-                class="hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1D50A2] rounded"
-              >
-                {{ ev.title }}
-              </NuxtLink>
-            </h3>
-
-            <!-- Optional blurb -->
-            <p
-              v-if="ev.blurb"
-              class="mt-1 text-sm text-gray-600 dark:text-gray-300 line-clamp-2"
-            >
-              {{ ev.blurb }}
-            </p>
-          </div>
-        </article>
+          <EventCard :event="ev" :index="i" />
+        </div>
       </div>
 
       <!-- Bottom-centered “All Events” -->

@@ -1,3 +1,4 @@
+<!-- components/contact/ContactInformationSection.vue -->
 <script setup lang="ts">
 import { ref } from 'vue'
 
@@ -9,7 +10,7 @@ const props = withDefaults(defineProps<{
   phoneTitle?: string
   phone?: string
   emailTitle?: string
-  email?: string
+  emailinf?: string
 }>(), {
   title: 'Contact information',
   // Replace with your institute’s Google Maps embed (no API key needed for basic embed)
@@ -20,7 +21,7 @@ const props = withDefaults(defineProps<{
   phoneTitle: 'Call Us',
   phone: '+(374)10 34 15 00',
   emailTitle: 'Send Email',
-  email: 'info@aanl.am'
+  emailinf: 'info@aanl.am'
 })
 
 /* Simple form state (plug into your API/Backend later) */
@@ -59,21 +60,20 @@ async function submit() {
   <section class="dark:bg-gray-950" aria-labelledby="contact-title">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
       <!-- Heading -->
-        <div class="mb-6 sm:mb-8">
+      <div class="mb-6 sm:mb-8">
         <h2
-            id="contact-title"
-            class="inline-block text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white
-                relative
-                after:content-[''] after:block after:h-[3px] after:bg-gray-900 after:rounded-full after:mt-2"
+          id="contact-title"
+          class="inline-block text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white
+                 relative
+                 after:content-[''] after:block after:h-[3px] after:bg-gray-900 after:rounded-full after:mt-2"
         >
-            {{ title }}
+          {{ title }}
         </h2>
-        </div>
-
+      </div>
 
       <!-- Card with form + map -->
       <div
-        class="relative overflow-hidden rounded-1xl ring-1 ring-black/5 dark:ring-white/10
+        class="relative overflow-hidden rounded-xl ring-1 ring-black/5 dark:ring-white/10
                shadow-[0_10px_40px_rgba(0,0,0,0.08)]"
       >
         <div class="grid lg:grid-cols-12">
@@ -98,6 +98,7 @@ async function submit() {
                   autocomplete="name"
                 />
               </div>
+
               <!-- Email -->
               <div>
                 <label for="email" class="sr-only">Email</label>
@@ -114,6 +115,7 @@ async function submit() {
                   autocomplete="email"
                 />
               </div>
+
               <!-- Message -->
               <div>
                 <label for="message" class="sr-only">Message</label>
@@ -156,7 +158,7 @@ async function submit() {
 
           <!-- Right: map -->
           <div class="lg:col-span-7">
-            <div class="relative h-[320px] sm:h-[380px] lg:h-full">
+            <div class="relative h-80 sm:h-[380px] lg:h-full">
               <iframe
                 :src="mapEmbedUrl"
                 class="absolute inset-0 size-full"
@@ -173,14 +175,14 @@ async function submit() {
 
       <!-- Bottom info bar -->
       <div
-        class="mt-6 sm:mt-8 rounded-1xl bg-[#0F2350] text-white
+        class="mt-6 sm:mt-8 rounded-xl bg-[#0F2350] text-white
                ring-1 ring-black/5 dark:ring-white/10
                shadow-[0_10px_40px_rgba(0,0,0,0.08)]"
       >
         <dl class="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/10">
           <!-- Address -->
           <div class="p-6 sm:p-8">
-            <dt class="text-lg font-semibold"> {{ addressTitle }} </dt>
+            <dt class="text-lg font-semibold">{{ addressTitle }}</dt>
             <dd class="mt-2 whitespace-pre-line text-white/80 text-sm leading-6">
               {{ address }}
             </dd>
@@ -188,10 +190,12 @@ async function submit() {
 
           <!-- Phone -->
           <div class="p-6 sm:p-8">
-            <dt class="text-lg font-semibold"> {{ phoneTitle }} </dt>
+            <dt class="text-lg font-semibold">{{ phoneTitle }}</dt>
             <dd class="mt-2 text-white/80 text-sm leading-6">
-              <a class="hover:underline focus:outline-none focus:ring-2 ring-white/50 rounded px-1"
-                 :href="`tel:${phone.replace(/[^+\d]/g,'')}`">
+              <a
+                class="hover:underline focus:outline-none focus:ring-2 ring-white/50 rounded px-1"
+                :href="`tel:${(phone || '').replace(/[^+\d]/g,'')}`"
+              >
                 {{ phone }}
               </a>
             </dd>
@@ -199,11 +203,13 @@ async function submit() {
 
           <!-- Email -->
           <div class="p-6 sm:p-8">
-            <dt class="text-lg font-semibold"> {{ emailTitle }} </dt>
+            <dt class="text-lg font-semibold">{{ emailTitle }}</dt>
             <dd class="mt-2 text-white/80 text-sm leading-6">
-              <a class="hover:underline focus:outline-none focus:ring-2 ring-white/50 rounded px-1"
-                 :href="`mailto:${email}`">
-                {{ email }}
+              <a
+                class="hover:underline focus:outline-none focus:ring-2 ring-white/50 rounded px-1"
+                :href="`mailto:${emailinf}`"
+              >
+                {{ emailinf }}
               </a>
             </dd>
           </div>
