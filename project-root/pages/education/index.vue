@@ -97,8 +97,13 @@ const cards: EducationCard[] = [
       <!-- HERO + OVERLAPPING ARTICLE (same idea as seminars inner page) -->
       <section class="mt-6">
         <div class="mx-auto max-w-7xl">
+         
           <!-- Hero banner -->
-          <div class="relative isolate overflow-hidden rounded-xl bg-gray-900">
+          <div
+            class="relative mt-4 isolate overflow-hidden rounded-xl bg-gray-900
+                  h-60 sm:h-[300px] lg:h-[385px]"
+          >
+            <!-- Background image -->
             <img
               :src="heroSrc"
               alt="Education at AANL"
@@ -110,25 +115,23 @@ const cards: EducationCard[] = [
 
             <!-- Gradient overlay -->
             <div
-              class="absolute inset-0
-                     bg-[linear-gradient(180deg,rgba(0,0,0,0.55),rgba(0,0,0,0.35))]"
+              class="pointer-events-none absolute inset-0
+                    bg-[linear-gradient(180deg,rgba(0,0,0,0.55),rgba(0,0,0,0.35))]"
             />
 
-            <!-- Title inside hero -->
+            <!-- Title (left-middle) -->
             <div class="absolute inset-0">
               <div
-                class="mx-auto flex h-full max-w-7xl items-end
-                       px-4 sm:px-6 lg:px-8 pb-6 sm:pb-8"
+                class="mx-auto flex h-full max-w-7xl items-center
+                      px-4 sm:px-6 lg:px-8"
               >
-                <h1
-                  class="text-3xl sm:text-4xl font-extrabold tracking-tight
-                         text-white"
-                >
+                <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
                   Education
                 </h1>
               </div>
             </div>
           </div>
+
 
           <!-- Overlapping article card -->
           <div class="relative">

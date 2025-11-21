@@ -98,7 +98,7 @@ const items = computed<DivisionItem[]>(() => {
           </NuxtLink>
         </li>
       </ul>
-         <!-- optional See More (desktop) -->
+
         <!-- Bottom-centered See More -->
         <div class="mt-8 flex justify-center">
         <NuxtLink

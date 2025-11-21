@@ -81,9 +81,19 @@ const list = computed<PartnerItem[]>(() => {
           class="group inline-flex items-center gap-2 text-[#1D50A2] font-semibold text-sm"
         >
           <span>All Partners</span>
-          <svg class="size-4 transition-transform group-hover:translate-x-1" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            <path d="M4 10h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-            <path d="M10 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg
+            width="26"
+            height="15"
+            viewBox="0 0 26 15"
+            fill="none"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            class="shrink-0"
+          >
+            <path
+              d="M25.7071 8.07112C26.0976 7.6806 26.0976 7.04743 25.7071 6.65691L19.3431 0.292946C18.9526 -0.0975785 18.3195 -0.0975785 17.9289 0.292946C17.5384 0.68347 17.5384 1.31664 17.9289 1.70716L23.5858 7.36401L17.9289 13.0209C17.5384 13.4114 17.5384 14.0446 17.9289 14.4351C18.3195 14.8256 18.9526 14.8256 19.3431 14.4351L25.7071 8.07112ZM0 8.36401L25 8.36401V6.36401L0 6.36401L0 8.36401Z"
+              fill="currentColor"
+            />
           </svg>
         </NuxtLink>
       </div>
@@ -128,17 +138,26 @@ const list = computed<PartnerItem[]>(() => {
         <NuxtLink
           :to="becomeHref"
           class="group inline-flex items-center justify-center gap-2
-                 h-[44px] rounded-[130px] px-6
+                 h-10 rounded-[130px] px-6
                  text-[15px] font-semibold
                  text-white bg-[#1D50A2] hover:bg-[#17408B]
                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1D50A2] focus-visible:ring-offset-2
                  transition"
         >
           <span>Become A Partner</span>
-          <svg class="size-4 transition-transform duration-200 ease-out group-hover:translate-x-1"
-               viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            <path d="M4 10h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-            <path d="M10 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg
+            width="26"
+            height="15"
+            viewBox="0 0 26 15"
+            fill="none"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            class="shrink-0"
+          >
+            <path
+              d="M25.7071 8.07112C26.0976 7.6806 26.0976 7.04743 25.7071 6.65691L19.3431 0.292946C18.9526 -0.0975785 18.3195 -0.0975785 17.9289 0.292946C17.5384 0.68347 17.5384 1.31664 17.9289 1.70716L23.5858 7.36401L17.9289 13.0209C17.5384 13.4114 17.5384 14.0446 17.9289 14.4351C18.3195 14.8256 18.9526 14.8256 19.3431 14.4351L25.7071 8.07112ZM0 8.36401L25 8.36401V6.36401L0 6.36401L0 8.36401Z"
+              fill="currentColor"
+            />
           </svg>
         </NuxtLink>
       </div>

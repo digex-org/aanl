@@ -3,13 +3,19 @@
 import { onMounted, onBeforeUnmount, ref, watch, computed } from 'vue'
 import { useRoute } from '#imports'
 import NAV, { mobileNavLinks } from '~/data/navigation'
+import GlobalSearchOverlay from '~/components/search/GlobalSearchOverlay.vue'
 
 /** --- State --- */
 const route = useRoute()
-const openDesktopKey = ref<string | null>(null)   // which top-level item is open (desktop)
-const openMobile = ref(false)                     // mobile drawer
-const hoverTimer = ref<NodeJS.Timeout | null>(null)
+const openDesktopKey = ref<string | null>(null)      // which top-level item is open (desktop)
+const openMobile = ref(false)                        // mobile drawer
+const hoverTimer = ref<ReturnType<typeof setTimeout> | null>(null)
 const headerRef = ref<HTMLElement | null>(null)
+
+// Global search overlay
+const isSearchOpen = ref(false)
+const openSearch = () => { isSearchOpen.value = true }
+const closeSearch = () => { isSearchOpen.value = false }
 
 /** --- Helpers --- */
 const isActive = (href?: string) =>
@@ -23,7 +29,7 @@ const closeAll = () => {
 /** Close menus on route change */
 watch(() => route.fullPath, () => closeAll())
 
-/** Close on outside click */
+/** Close on outside click (desktop mega) */
 const onDocClick = (e: MouseEvent) => {
   const target = e.target as HTMLElement
   if (!target.closest('[data-nav-root]')) openDesktopKey.value = null
@@ -31,9 +37,12 @@ const onDocClick = (e: MouseEvent) => {
 onMounted(() => document.addEventListener('click', onDocClick))
 onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
 
-/** Esc closes menus */
+/** Esc closes menus + search */
 const onKey = (e: KeyboardEvent) => {
-  if (e.key === 'Escape') closeAll()
+  if (e.key === 'Escape') {
+    closeAll()
+    closeSearch()
+  }
 }
 onMounted(() => window.addEventListener('keydown', onKey))
 onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
@@ -49,12 +58,13 @@ const closeDelayed = () => {
 }
 
 /** Current mega item (for the full-width panel) */
-const currentMega = computed(() => NAV.find(i => i.label === openDesktopKey.value && !!i.mega))
+const currentMega = computed(() =>
+  NAV.find(i => i.label === openDesktopKey.value && !!i.mega)
+)
 
 /** Mobile accordion model built from NAV (sections mirror mega columns/groups) */
 const mobileNav = computed(() =>
   NAV.map(item => {
-    // gather items from columns and groups
     const sections =
       item.mega?.columns?.map(col => {
         const flat = [
@@ -65,14 +75,13 @@ const mobileNav = computed(() =>
       }) ?? []
     return {
       label: item.label,
-      href: item.href,      // for direct navigation items (no mega)
-      sections              // if length > 0 => show accordion
+      href: item.href,
+      sections
     }
   })
 )
 
-/** (Optional) also keep a flattened list if you need elsewhere */
-const mobileLinks = mobileNavLinks(NAV)
+const mobileLinks = mobileNavLinks(NAV) // kept in case you use it elsewhere
 </script>
 
 <template>
@@ -133,7 +142,13 @@ const mobileLinks = mobileNavLinks(NAV)
                   :class="{ 'rotate-180': openDesktopKey === item.label }"
                   viewBox="0 0 20 20" fill="none" aria-hidden="true"
                 >
-                  <path d="M5 12l5-5 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path
+                    d="M5 12l5-5 5 5"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
                 </svg>
               </button>
             </li>
@@ -142,14 +157,21 @@ const mobileLinks = mobileNavLinks(NAV)
 
         <!-- Right actions (search + locale) -->
         <div class="hidden lg:flex items-center gap-4">
+          <!-- Search button -->
           <button
             type="button"
-            class="h-10 w-10 rounded-full border border-white bg-[#1D50A2] p-2 grid place-items-center text-white shadow-sm hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1D50A2] mr-[20px]"
-            aria-label="Search"
+            class="h-10 w-10 grid place-items-center cursor-pointer rounded-full
+                   bg-[#1D50A2] text-white shadow-md
+                   hover:bg-[#174088]
+                   focus-visible:outline-none focus-visible:ring-2
+                   focus-visible:ring-offset-2 focus-visible:ring-[#1D50A2]"
+            aria-label="Open global search"
+            @click="openSearch"
           >
-            <IconsIconSearch class="h-5 w-5" />
+            <IconsIconSearch class="h-4 w-4" />
           </button>
 
+          <!-- Locale -->
           <NuxtLink to="/" class="inline-flex items-center" aria-label="Հայերեն">
             <img
               src="/icons/flags/am.svg"
@@ -167,7 +189,7 @@ const mobileLinks = mobileNavLinks(NAV)
           @click="openMobile = !openMobile"
         >
           <svg class="h-5 w-5" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none">
-            <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round"/>
+            <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
           </svg>
         </button>
       </div>
@@ -199,7 +221,10 @@ const mobileLinks = mobileNavLinks(NAV)
               :key="currentMega.label + ':' + idx"
               class="min-w-[220px]"
             >
-              <p v-if="col.title" class="px-2 pb-2 text-[13px] font-semibold text-slate-500 uppercase tracking-wide">
+              <p
+                v-if="col.title"
+                class="px-2 pb-2 text-[13px] font-semibold text-slate-500 uppercase tracking-wide"
+              >
                 {{ col.title }}
               </p>
 
@@ -223,7 +248,10 @@ const mobileLinks = mobileNavLinks(NAV)
                   :key="gi"
                   class="border-t border-slate-100 pt-3 first:border-0 first:pt-0"
                 >
-                  <p v-if="g.title" class="px-2 pb-2 text-[12px] font-medium text-slate-500 uppercase tracking-wide">
+                  <p
+                    v-if="g.title"
+                    class="px-2 pb-2 text-[12px] font-medium text-slate-500 uppercase tracking-wide"
+                  >
                     {{ g.title }}
                   </p>
                   <div class="flex flex-col">
@@ -250,7 +278,7 @@ const mobileLinks = mobileNavLinks(NAV)
       <div class="container mx-auto px-4 py-4 space-y-2">
         <!-- Top-level items -->
         <template v-for="item in mobileNav" :key="item.label">
-          <!-- If no submenu (no sections): render direct link row -->
+          <!-- Direct link row -->
           <NuxtLink
             v-if="!item.sections.length && item.href"
             :to="item.href"
@@ -260,7 +288,7 @@ const mobileLinks = mobileNavLinks(NAV)
             {{ item.label }}
           </NuxtLink>
 
-          <!-- If submenu exists: accordion with sections -->
+          <!-- Accordion with sections -->
           <details v-else class="group rounded-md">
             <summary
               class="flex items-center justify-between cursor-pointer select-none rounded-md px-3 py-2 text-[16px] font-semibold text-[#1A2236] hover:bg-slate-50"
@@ -270,7 +298,13 @@ const mobileLinks = mobileNavLinks(NAV)
                 class="ml-2 h-4 w-4 text-slate-500 transition-transform group-open:rotate-180"
                 viewBox="0 0 20 20" fill="none" aria-hidden="true"
               >
-                <path d="M5 12l5-5 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path
+                  d="M5 12l5-5 5 5"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
             </summary>
 
@@ -281,7 +315,10 @@ const mobileLinks = mobileNavLinks(NAV)
                 :key="item.label + ':' + (sec.title ?? 'sec') + ':' + i"
                 class="mb-3 last:mb-0"
               >
-                <p v-if="sec.title" class="px-2 pb-1 text-[12px] font-medium text-slate-500 uppercase tracking-wide">
+                <p
+                  v-if="sec.title"
+                  class="px-2 pb-1 text-[12px] font-medium text-slate-500 uppercase tracking-wide"
+                >
                   {{ sec.title }}
                 </p>
                 <div class="flex flex-col">
@@ -302,10 +339,13 @@ const mobileLinks = mobileNavLinks(NAV)
 
         <!-- Drawer footer actions -->
         <div class="flex items-center justify-between pt-3">
+          <!-- Mobile search button -->
           <button
             type="button"
-            class="h-10 w-10 rounded-full border border-white bg-[#1D50A2] p-2 text-white grid place-items-center shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1D50A2]"
-            aria-label="Search"
+            class="h-10 w-10 rounded-full border cursor-pointer border-white bg-[#1D50A2] p-2 text-white grid place-items-center shadow-sm
+                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1D50A2]"
+            aria-label="Open global search"
+            @click="() => { openSearch(); openMobile = false }"
           >
             <IconsIconSearch class="h-5 w-5" />
           </button>
@@ -320,14 +360,24 @@ const mobileLinks = mobileNavLinks(NAV)
         </div>
       </div>
     </div>
+
+    <!-- Global search overlay (teleported to <body>) -->
+    <GlobalSearchOverlay :open="isSearchOpen" @close="closeSearch" />
   </header>
 </template>
 
 <style scoped>
-/* simple fade for the mega */
-.fade-enter-active, .fade-leave-active { transition: opacity .15s ease; }
-.fade-enter-from, .fade-leave-to { opacity: 0; }
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.15s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
 
 /* Hide default summary marker (iOS/Safari compatibility) */
-summary::-webkit-details-marker { display: none; }
+summary::-webkit-details-marker {
+  display: none;
+}
 </style>

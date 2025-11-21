@@ -60,13 +60,9 @@ and medical advances to exploring the universe.`,
         >
           <span>{{ ctaText }}</span>
           <!-- Arrow icon -->
-          <svg
-            class="size-4 shrink-0 transition-transform duration-200 ease-out group-hover:translate-x-1"
-            viewBox="0 0 20 20" fill="none" aria-hidden="true"
-          >
-            <path d="M4 10h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-            <path d="M10 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+        <svg width="26" height="15" viewBox="0 0 26 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M25.7071 8.07106C26.0976 7.68054 26.0976 7.04737 25.7071 6.65685L19.3431 0.292885C18.9526 -0.0976396 18.3195 -0.0976396 17.9289 0.292885C17.5384 0.683409 17.5384 1.31657 17.9289 1.7071L23.5858 7.36395L17.9289 13.0208C17.5384 13.4113 17.5384 14.0445 17.9289 14.435C18.3195 14.8255 18.9526 14.8255 19.3431 14.435L25.7071 8.07106ZM0 8.36395L25 8.36395V6.36395L0 6.36395L0 8.36395Z" fill="white"/>
+        </svg>
         </NuxtLink>
 
 

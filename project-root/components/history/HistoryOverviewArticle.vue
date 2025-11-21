@@ -104,12 +104,16 @@ const heroSrc = computed(() => imgSrc(props.heroImageFile))
       />
     </div>
 
-    <!-- Hero banner -->
-    <div class="relative  mt-4 isolate overflow-hidden rounded-xl bg-gray-900">
+     <!-- Hero banner -->
+    <div
+      class="relative mt-4 isolate overflow-hidden rounded-xl bg-gray-900
+            h-[240px] sm:h-[300px] lg:h-[385px]"
+    >
+      <!-- Background image -->
       <img
         :src="heroSrc"
         :alt="heroTitle"
-        class="w-full h-[500px] sm:h-5380px] lg:h-[580px] object-cover"
+        class="absolute inset-0 w-full h-full object-cover"
         loading="eager"
         decoding="async"
         fetchpriority="high"
@@ -118,18 +122,22 @@ const heroSrc = computed(() => imgSrc(props.heroImageFile))
       <!-- Gradient overlay -->
       <div
         class="pointer-events-none absolute inset-0
-               bg-[linear-gradient(180deg,rgba(0,0,0,0.55),rgba(0,0,0,0.35))]"
+              bg-[linear-gradient(180deg,rgba(0,0,0,0.55),rgba(0,0,0,0.35))]"
       />
 
-      <!-- Title only (bottom-left) -->
-      <div class="absolute inset-0 mb-50">
-        <div class="mx-auto flex h-full max-w-7xl items-end px-4 pb-6 sm:px-6 sm:pb-8 lg:px-8">
+      <!-- Title (left-middle) -->
+      <div class="absolute inset-0">
+        <div
+          class="mx-auto flex h-full max-w-7xl items-center
+                px-4 sm:px-6 lg:px-8"
+        >
           <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
             {{ heroTitle }}
           </h1>
         </div>
       </div>
     </div>
+
 
     <!-- Overlapping white article card -->
     <div class="relative">

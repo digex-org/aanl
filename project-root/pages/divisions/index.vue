@@ -6,5 +6,5 @@ useSeoMeta({
 </script>
 
 <template>
-  <SectionsDivisionsGrid />
+  <SectionsDivisionsGrid :showAllButton="false" />
 </template>
