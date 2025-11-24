@@ -2,16 +2,19 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { useHead } from '#imports'
+import { useHead, useI18n } from '#imports'
 
 import { getNewsBySlug, getAllNews, type NewsItem } from '~/data/news'
-import { useBreadcrumbs } from '~/composables/useBreadcrumbs'
 import AppBreadcrumbs from '~/components/ui/AppBreadcrumbs.vue'
 import NewsCard from '~/components/news/NewsCard.vue'
+import type { Crumb } from '~/composables/useBreadcrumbs'
 
 const route = useRoute()
 const slug = computed(() => String(route.params.slug || ''))
 
+const { t, locale } = useI18n()
+
+/* ---------- Current item & all news ---------- */
 const item = computed<NewsItem | undefined>(() => getNewsBySlug(slug.value))
 const allNews = computed(() => getAllNews())
 
@@ -20,7 +23,66 @@ const related = computed<NewsItem[]>(() =>
   allNews.value.filter(n => n.slug !== slug.value).slice(0, 4)
 )
 
-// cover images
+/* ---------- i18n-aware title & body ---------- */
+/**
+ * Uses news.items.<slug>.title / body if present in locales,
+ * falls back to the static data from /data/news.ts.
+ */
+const newsTitle = computed(() => {
+  if (!item.value) return ''
+  const key = `news.items.${item.value.slug}.title`
+  const translated = t(key)
+  return translated === key ? item.value.title : translated
+})
+
+const newsBody = computed(() => {
+  if (!item.value) return ''
+  const key = `news.items.${item.value.slug}.body`
+  const translated = t(key)
+  return translated === key ? item.value.body : translated
+})
+
+/* ---------- Date formatting (locale-aware) ---------- */
+function formatDate(iso: string): string {
+  const d = new Date(iso)
+  const loc = locale.value === 'hy' ? 'hy-AM' : 'en-US'
+
+  try {
+    return d.toLocaleDateString(loc, {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric'
+    })
+  } catch {
+    // Fallback if locale is somehow invalid
+    return d.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric'
+    })
+  }
+}
+
+/* ---------- Body paragraphs ---------- */   
+const paragraphs = computed(() =>
+  (newsBody.value || '').split(/\n{2,}/g)
+)
+
+/* ---------- Breadcrumbs (i18n-aware) ---------- */
+const crumbs = computed<Crumb[]>(() => [
+  { label: t('nav.top.home'), to: '/' },
+  { label: t('news.page.breadcrumbTitle'), to: '/news' },
+  { label: newsTitle.value || t('news.detail.fallbackTitle') }
+])
+
+/* ---------- SEO ---------- */
+useHead(() => ({
+  title: item.value
+    ? `${newsTitle.value} — ${t('news.page.title')} — AANL`
+    : t('news.detail.metaFallbackTitle')
+}))
+
+/* ---------- Cover images ---------- */
 const coverMods = import.meta.glob('~/assets/images/news/*', {
   eager: true,
   import: 'default'
@@ -33,33 +95,6 @@ const coverByFile = Object.fromEntries(
 function imgSrc(file: string): string {
   return coverByFile[file] || file
 }
-
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
-}
-
-// crude body split into paragraphs
-const paragraphs = computed(() => (item.value?.body ?? '').split(/\n{2,}/g))
-
-/** Breadcrumbs: Home › News › Current article */
-const { crumbs, jsonLd } = useBreadcrumbs({
-  segmentLabels: { news: 'News' },
-  currentLabel: item.value?.title ?? null
-})
-
-useHead(() => ({
-  title: item.value ? `${item.value.title} — News — AANL` : 'News — AANL',
-  script: [
-    {
-      type: 'application/ld+json',
-      children: JSON.stringify(jsonLd.value)
-    }
-  ]
-}))
 </script>
 
 <template>
@@ -74,7 +109,7 @@ useHead(() => ({
         <div class="overflow-hidden rounded-xl shadow-lg ring-1 ring-black/5">
           <img
             :src="imgSrc(item.coverImage)"
-            :alt="item.title"
+            :alt="newsTitle"
             class="w-full h-[260px] sm:h-80 lg:h-[380px] object-cover"
             loading="eager"
             decoding="async"
@@ -100,7 +135,7 @@ useHead(() => ({
         <h1
           class="mt-1 text-2xl sm:text-3xl lg:text-[32px] font-semibold text-gray-900 dark:text-white"
         >
-          {{ item.title }}
+          {{ newsTitle }}
         </h1>
 
         <div
@@ -111,11 +146,8 @@ useHead(() => ({
           </p>
         </div>
 
-        <!-- Optional gallery (kept for future use) -->
-        <div
-        
-          class="mt-6 grid   gap-4"
-        >
+        <!-- Small related grid under the article (optional) -->
+        <div class="mt-6">
           <div class="grid grid-cols-1 p-6 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <NewsCard
               v-for="n in related"
@@ -127,9 +159,11 @@ useHead(() => ({
           </div>
         </div>
 
-        <!-- Share icons (placeholder) -->
+        <!-- Share icons -->
         <div class="mt-6 flex items-center gap-3 text-[#1D50A2]">
-          <span class="text-sm text-gray-500">Share</span>
+          <span class="text-sm text-gray-500">
+            {{ t('news.detail.shareLabel') }}
+          </span>
           <button class="size-8 rounded-full bg-gray-100 flex items-center justify-center">
             f
           </button>
@@ -144,9 +178,9 @@ useHead(() => ({
 
       <!-- Dark band: Upcoming events + related topics -->
       <section class="bg-[#0B1843] mt-10 border rounded-xl border-white/10">
-        <!-- Upcoming events (themed variant) -->
+        <!-- Upcoming events (themed variant, i18n title from events.section.title) -->
         <SectionsUpcomingEvents
-          title="Upcoming Events"
+          :title="t('events.section.title')"
           section-bg-class="bg-[#0B1843] border rounded-xl"
           title-class="text-white"
           all-button-class="
@@ -156,18 +190,17 @@ useHead(() => ({
           "
         />
 
-        <!-- Related topics / news (using NewsCard) -->
+        <!-- Related topics / news -->
         <div class="mt-6 mb-8">
           <h2
-            id="events-title"
-            class="text-2xl p-6 sm:text-3xl  font-bold text-white tracking-tight"
+            class="text-2xl p-6 sm:text-3xl font-bold text-white tracking-tight"
           >
             <span
               class="relative inline-block
                 after:content-[''] after:block after:h-[3px]
                 after:bg-current after:rounded-full after:mt-2"
             >
-              Related topics
+              {{ t('news.detail.relatedTitle') }}
             </span>
           </h2>
           <div class="grid grid-cols-1 p-6 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -185,14 +218,16 @@ useHead(() => ({
   </div>
 
   <!-- Fallback if slug not found -->
-  <div v-else class="mx-auto max-w-3xl px-4 py-16 text-center">
-    <h1 class="text-2xl font-semibold">News item not found</h1>
-    <p class="mt-2 text-gray-600">
-      Please check the URL or return to the
+  <div v-else class="mx-auto max-w-3xl px-4 py-16 text-center dark:bg-gray-950">
+    <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">
+      {{ t('news.detail.notFoundTitle') }}
+    </h1>
+    <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">
+      {{ t('news.detail.notFoundBody') }}
       <NuxtLink to="/news" class="text-[--brand-navy] hover:underline">
-        News
+        {{ t('news.page.title') }}
       </NuxtLink>
-      page.
+      .
     </p>
   </div>
 </template>

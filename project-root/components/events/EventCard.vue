@@ -37,10 +37,10 @@ function parts(iso: string) {
   }
 }
 
-// Computed date parts with localized month label
+// ✅ Use events.months.* (same as events/[slug].vue)
 const dateParts = computed(() => {
   const base = parts(props.event.date)
-  const monthLabel = t(`common.months.${base.monthKey}`)
+  const monthLabel = t(`events.months.${base.monthKey}`)
   return {
     ...base,
     monthLabel
@@ -64,8 +64,6 @@ function topAccent(accent?: EventItem['accent'], i?: number) {
 
 /**
  * Always produce an absolute URL for NuxtLink.
- * - If event.href starts with "/", keep it.
- * - If it’s like "events/slug", prefix with "/".
  */
 const toUrl = computed(() => {
   const href = props.event.href || ''
@@ -73,14 +71,7 @@ const toUrl = computed(() => {
   return href.startsWith('/') ? href : `/${href}`
 })
 
-/**
- * i18n-aware title + blurb based on event.slug
- * Falls back to original event.title / event.blurb if translation is missing.
- *
- * Keys:
- *  - events.items.<slug>.title
- *  - events.items.<slug>.blurb
- */
+// i18n-aware title + blurb
 const titleKey = computed(() => `events.items.${props.event.slug}.title`)
 const blurbKey = computed(() => `events.items.${props.event.slug}.blurb`)
 
@@ -92,6 +83,7 @@ const blurbText = computed(() =>
   te(blurbKey.value) ? t(blurbKey.value) : (props.event.blurb ?? '')
 )
 </script>
+
 
 <template>
   <article

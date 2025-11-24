@@ -59,7 +59,7 @@ const seeMoreText = computed(() => t('divisions.grid.seeMore'))
         <NuxtLink
           :to="allHref"
           class="group inline-flex items-center justify-center gap-2
-                 w-[155px] h-10 rounded-[130px] px-1
+                 h-10 rounded-[130px] px-4
                  text-[15px] font-semibold
                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
                  transition"

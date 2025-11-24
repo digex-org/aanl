@@ -1,0 +1,64 @@
+{
+  "filters": {
+    "allDivisions": "All divisions",
+    "searchPlaceholder": "Search news…",
+    "categoryLabel": "Category",
+    "divisionLabel": "Division",
+    "apply": "Apply filters",
+    "clear": "Clear"
+  },
+  "section": {
+  "title": "News",
+  "all": "All news",
+  "readMore": "Read more"
+ },
+  "categories": {
+    "Conference": "Conference",
+    "Education": "Education",
+    "Events": "Events",
+    "Partners": "Partners",
+    "Research": "Research",
+    "Science": "Science",
+    "Library": "Library",
+    "International relations": "International relations",
+    "Other": "Other"
+  },
+
+  "page": {
+    "title": "News",
+    "breadcrumbTitle": "News",
+    "metaTitle": "News — AANL",
+    "metaDescription": "Latest news, announcements and scientific updates from A. I. Alikhanyan National Science Laboratory.",
+    "intro": "Latest news, announcements and scientific updates from A. I. Alikhanyan National Science Laboratory.",
+    "noResults": "No news found for this filter."
+  },
+
+  "detail": {
+    "fallbackTitle": "News",
+    "metaFallbackTitle": "News — AANL",
+    "shareLabel": "Share",
+    "relatedTitle": "Related topics",
+    "notFoundTitle": "News item not found",
+    "notFoundBody": "Please check the URL or return to the News page."
+  },
+
+  "items": {
+    "11-february-international-day-of-women-and-girls-in-science": {
+      "title": "11 of February is the International Day of Women and Girls in Science!",
+      "excerpt": "The LARES-2 space experiment to test General Relativity received its first release in The European Physical Journal Plus, highlighting the contribution of women in science and technology.",
+      "body": "The International Day of Women and Girls in Science is an annual observance adopted by the United Nations General Assembly to promote the full and equal access and participation of women in Science, Technology, Engineering and Mathematics (STEM) fields.\n\nThe LARES-2 space experiment, conducted by the Italian Space Agency (ASI), provides a significant advance in testing General Relativity. The results are in complete agreement with the predictions of Einstein’s theory.\n\nTremendous work and huge efforts by a group of leading scholars, among them Nobel laureate Sir Roger Penrose, including Prof. Vahagn Gurzadyan, head of the AANL Center for Cosmology and Astrophysics, made this project possible.\n\nThe article is dedicated to the great physicist John Archibald Wheeler and is available at https://doi.org/10.1140/epjp/s13360-023-04596-6."
+    },
+
+    "international-conference-on-particle-physics-and-cosmology": {
+      "title": "International Conference on Particle Physics and Cosmology dedicated to Prof. Rubakov memory",
+      "excerpt": "AANL hosted an international conference on particle physics and cosmology bringing together researchers from leading institutes worldwide.",
+      "body": "AANL hosted an international conference on particle physics and cosmology dedicated to the memory of Prof. Rubakov.\n\nThe conference brought together researchers from leading institutes worldwide to discuss recent advances in high-energy physics, cosmology and related fields."
+    },
+
+    "rubakov-library-article": {
+      "title": "Library highlight: resources on particle physics and cosmology dedicated to Prof. Rubakov",
+      "excerpt": "The AANL library presents a curated collection of works on particle physics and cosmology, honoring the scientific legacy of Prof. Rubakov.",
+      "body": "The AANL library has curated a special collection of works on particle physics and cosmology dedicated to the memory of Prof. Rubakov.\n\nThe collection includes key monographs, textbooks and review articles that have shaped the modern understanding of high-energy physics and cosmology."
+    }
+  }
+}

@@ -1,19 +1,29 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useI18n } from '#imports'
+import { getAllNews, type NewsItem } from '~/data/news'
 
-type NewsItem = {
-  id: string | number
-  title: string
-  href?: string
-  date: string      // ISO date
-  excerpt?: string
-  image?: string    // filename only, e.g. "news-fetured-img.webp"
-}
+/**
+ * Props:
+ * - title: optional override for section title (otherwise use i18n)
+ * - allHref: "All news" link
+ * - items: optional override list (otherwise use getAllNews())
+ * - maxItems: how many items to show at most
+ */
+const props = withDefaults(defineProps<{
+  title?: string
+  allHref?: string
+  items?: NewsItem[]
+  maxItems?: number
+}>(), {
+  title: undefined,
+  allHref: '/news',
+  maxItems: 8
+})
 
-/* ===== Resolve images from assets/images/news =====
-   We import every file eagerly and map by its filename.
-   Then use img('filename.webp') to get the built URL.
-*/
+const { t, locale } = useI18n()
+
+/* ===== Image resolution from assets/images/news ===== */
 const newsImages = import.meta.glob('~/assets/images/news/*.{webp,png,jpg,jpeg}', {
   eager: true,
   import: 'default'
@@ -27,106 +37,94 @@ function img(name?: string) {
   return name ? (imageByName[name] ?? '') : ''
 }
 
-/* ===== Props ===== */
-const props = withDefaults(defineProps<{
-  title?: string
-  allHref?: string
-  items?: NewsItem[]
-}>(), {
-  title: 'News',
-  allHref: '/news'
+/* ===== Helper: safe translate with fallback ===== */
+function tr(key: string, fallback: string) {
+  const translated = t(key)
+  return translated === key ? fallback : translated
+}
+
+/* ===== i18n-aware section title & labels ===== */
+const sectionTitle = computed(() =>
+  props.title ?? t('news.page.title') // "News" / "Նորություններ"
+)
+
+const allNewsLabel = computed(() =>
+  tr('news.section.all', 'All news')
+)
+
+const readMoreLabel = computed(() =>
+  tr('news.section.readMore', 'Read more')
+)
+
+/* ===== Load news (from data/news.ts) ===== */
+const rawList = computed<NewsItem[]>(() =>
+  props.items?.length ? props.items : getAllNews()
+)
+
+/** Apply maxItems limit for section */
+const list = computed<NewsItem[]>(() => {
+  const arr = rawList.value
+  if (props.maxItems && props.maxItems > 0) {
+    return arr.slice(0, props.maxItems)
+  }
+  return arr
 })
 
-/** Demo data (replace by passing :items from API/CMS).
- *  IMPORTANT: use filenames only in `image`.
- */
-const demo: NewsItem[] = [
-  {
-    id: 1,
-    title: 'Evolving Universe: Theory And Observations Starobinsky Memorial Conference October',
-    date: '2024-05-31',
-    image: 'news-fetured-img.webp',
-    href: '/news/11-february-international-day-of-women-and-girls-in-science',
-    excerpt: 'A multi-day conference on cosmology, gravity and inflationary theory.'
-  },
-  {
-    id: 2,
-    title: 'The first release of lares–2 space experiment results on testing fundamental physics',
-    date: '2023-12-22',
-    image: 'Gurzadyan_Cosmo 1.webp',
-    href: '/news/11-february-international-day-of-women-and-girls-in-science',
-    excerpt: 'Early analysis confirms measurement stability and improved sensitivity.'
-  },
-  {
-    id: 3,
-    title: '75th anniversary of prof. Norayr Akopov',
-    date: '2023-12-22',
-    image: 'akopovbd 1.webp',
-    href: '/news/international-conference-on-particle-physics-and-cosmology',
-    excerpt: 'A commemorative event honoring contributions to particle physics.'
-  },
-  {
-    id: 4,
-    title: 'International Conference on Particle Physics and Cosmology dedicated to Prof. Rubakov memory',
-    date: '2023-12-22',
-    image: 'rubakov 1.webp',
-    href: '/news/rubakov-library-article',
-    excerpt: 'Leading researchers discussed novel directions in early-universe physics.'
-  },
-   {
-    id: 5,
-    title: 'Evolving Universe: Theory And Observations Starobinsky Memorial Conference October',
-    date: '2024-05-31',
-    image: 'news-fetured-img.webp',
-    href: '/news/11-february-international-day-of-women-and-girls-in-science',
-    excerpt: 'A multi-day conference on cosmology, gravity and inflationary theory.'
-  },
-  {
-    id: 6,
-    title: 'The first release of lares–2 space experiment results on testing fundamental physics',
-    date: '2023-12-22',
-    image: 'Gurzadyan_Cosmo 1.webp',
-    href: '/news/11-february-international-day-of-women-and-girls-in-science',
-    excerpt: 'Early analysis confirms measurement stability and improved sensitivity.'
-  },
-  {
-    id: 7,
-    title: '75th anniversary of prof. Norayr Akopov',
-    date: '2023-12-22',
-    image: 'akopovbd 1.webp',
-    href: '/news/international-conference-on-particle-physics-and-cosmology',
-    excerpt: 'A commemorative event honoring contributions to particle physics.'
-  },
-  {
-    id: 8,
-    title: 'International Conference on Particle Physics and Cosmology dedicated to Prof. Rubakov memory',
-    date: '2023-12-22',
-    image: 'rubakov 1.webp',
-    href: '/news/rubakov-library-article',
-    excerpt: 'Leading researchers discussed novel directions in early-universe physics.'
-  }
-]
-
-const list = computed<NewsItem[]>(() => props.items?.length ? props.items : demo)
+/** Featured + right column items */
 const featured = computed<NewsItem | null>(() => list.value[0] ?? null)
 const secondary = computed<NewsItem[]>(() => list.value.slice(1, 4))
 
-/** date formatter */
-function fmt(d: string) {
-  const f = new Date(d)
-  return f.toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
+/* ===== i18n-aware title & excerpt per news item ===== */
+/**
+ * Expects:
+ *   news.items.<slug>.title
+ *   news.items.<slug>.excerpt   (optional)
+ * in your en/hy/news.json
+ */
+function newsTitle(item: NewsItem) {
+  const key = `news.items.${item.slug}.title`
+  const translated = t(key)
+  return translated === key ? item.title : translated
 }
 
-/** Mobile slider controls */
+function newsExcerpt(item: NewsItem) {
+  const key = `news.items.${item.slug}.excerpt`
+  const translated = t(key)
+  if (translated !== key) return translated
+  return item.excerpt ?? ''
+}
+
+/* ===== Localized date formatter ===== */
+function fmt(date: string) {
+  const d = new Date(date)
+  const loc = locale.value === 'hy' ? 'hy-AM' : 'en-US'
+
+  try {
+    return d.toLocaleDateString(loc, {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric'
+    })
+  } catch {
+    // robust fallback
+    return d.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric'
+    })
+  }
+}
+
+/* ===== Mobile slider controls ===== */
 const trackRef = ref<HTMLElement | null>(null)
+
 function scrollByCard(dir: 1 | -1) {
   const el = trackRef.value
   if (!el) return
-  el.scrollBy({ left: dir * Math.round(el.clientWidth * 0.9), behavior: 'smooth' })
+  el.scrollBy({
+    left: dir * Math.round(el.clientWidth * 0.9),
+    behavior: 'smooth'
+  })
 }
 </script>
 
@@ -136,21 +134,19 @@ function scrollByCard(dir: 1 | -1) {
       <!-- Header -->
       <div class="mb-6 sm:mb-8 flex items-center justify-between">
         <h2
-            id="contact-title"
-            class="inline-block text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white
-                relative
-                after:content-[''] after:block after:h-[3px] after:bg-gray-900 after:rounded-full after:mt-2"
+          id="news-title"
+          class="inline-block text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white
+                 relative
+                 after:content-[''] after:block after:h-[3px] after:bg-gray-900 after:rounded-full after:mt-2"
         >
-            {{ title }}
+          {{ sectionTitle }}
         </h2>
-       <span class="mt-3 inline-block h-[3px]  rounded-full text-gray-900"></span>
-
 
         <NuxtLink
           :to="allHref"
           class="group inline-flex items-center gap-2 text-[#1D50A2] font-semibold text-sm"
         >
-          <span>All News</span>
+          <span>{{ allNewsLabel }}</span>
           <svg
             width="26"
             height="15"
@@ -176,56 +172,78 @@ function scrollByCard(dir: 1 | -1) {
           class="col-span-6 rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-gray-900
                  shadow-[0_1px_2px_rgba(0,0,0,0.06)] ring-1 ring-black/5 dark:ring-white/5"
         >
-          <NuxtLink :to="featured.href || '#'" class="block p-5 sm:p-6">
+          <NuxtLink :to="`/news/${featured.slug}`" class="block p-5 sm:p-6">
             <figure class="overflow-hidden rounded-2xl">
-              <img :src="img(featured.image)" :alt="featured.title"
-                   class="w-full h-[340px] object-cover" loading="lazy" decoding="async" />
+              <img
+                :src="img(featured.coverImage)"
+                :alt="newsTitle(featured)"
+                class="w-full h-[340px] object-cover"
+                loading="lazy"
+                decoding="async"
+              />
             </figure>
 
-            <p class="mt-4 text-sm text-gray-500">{{ fmt(featured.date) }}</p>
+            <p class="mt-4 text-sm text-gray-500">
+              {{ fmt(featured.date) }}
+            </p>
             <h3 class="mt-1 text-[22px] leading-snug font-semibold text-gray-900 dark:text-gray-100">
-              {{ featured.title }}
+              {{ newsTitle(featured) }}
             </h3>
-            <p v-if="featured.excerpt" class="mt-1.5 text-[15px] text-gray-700 dark:text-gray-300 line-clamp-3">
-              {{ featured.excerpt }}
+            <p
+              v-if="newsExcerpt(featured)"
+              class="mt-1.5 text-[15px] text-gray-700 dark:text-gray-300 line-clamp-3"
+            >
+              {{ newsExcerpt(featured) }}
             </p>
 
             <span class="mt-3 inline-flex items-center gap-2 text-[#1D50A2] font-semibold text-sm">
-              Read more
+              {{ readMoreLabel }}
               <svg class="size-4" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <path d="M4 10h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                <path d="M10 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M4 10h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                <path d="M10 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </span>
           </NuxtLink>
         </article>
 
-        <!-- Right column -->
+        <!-- Right column: 3 secondary items -->
         <div class="col-span-6 flex flex-col gap-4">
           <article
-            v-for="n in secondary" :key="n.id"
+            v-for="n in secondary"
+            :key="n.id"
             class="rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-gray-900
                    shadow-[0_1px_2px_rgba(0,0,0,0.06)] ring-1 ring-black/5 dark:ring-white/5"
           >
-            <NuxtLink :to="n.href || '#'" class="flex gap-4 p-4 sm:p-5">
+            <NuxtLink :to="`/news/${n.slug}`" class="flex gap-4 p-4 sm:p-5">
               <figure class="relative w-[233px] shrink-0 overflow-hidden rounded-xl">
-                <img :src="img(n.image)" :alt="n.title" class="size-full object-cover" loading="lazy" decoding="async" />
+                <img
+                  :src="img(n.coverImage)"
+                  :alt="newsTitle(n)"
+                  class="size-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
               </figure>
 
               <div class="min-w-0">
-                <p class="text-xs text-gray-500">{{ fmt(n.date) }}</p>
+                <p class="text-xs text-gray-500">
+                  {{ fmt(n.date) }}
+                </p>
                 <h3 class="mt-1 text-[17px] leading-snug font-semibold text-gray-900 dark:text-gray-100">
-                  {{ n.title }}
+                  {{ newsTitle(n) }}
                 </h3>
-                <p v-if="n.excerpt" class="mt-1 text-sm text-gray-700 dark:text-gray-300 line-clamp-2">
-                  {{ n.excerpt }}
+                <p
+                  v-if="newsExcerpt(n)"
+                  class="mt-1 text-sm text-gray-700 dark:text-gray-300 line-clamp-2"
+                >
+                  {{ newsExcerpt(n) }}
                 </p>
 
                 <span class="mt-2 inline-flex items-center gap-1.5 text-[#1D50A2] font-semibold text-sm">
-                  Read more
+                  {{ readMoreLabel }}
                   <svg class="size-4" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                    <path d="M4 10h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                    <path d="M10 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M4 10h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                    <path d="M10 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
                   </svg>
                 </span>
               </div>
@@ -238,8 +256,7 @@ function scrollByCard(dir: 1 | -1) {
       <div class="relative lg:hidden">
         <div
           ref="trackRef"
-          class="snap-x snap-mandatory overflow-x-auto -mx-4 px-4
-                 flex gap-4"
+          class="snap-x snap-mandatory overflow-x-auto -mx-4 px-4 flex gap-4"
           role="list"
           aria-label="Latest news"
         >
@@ -251,22 +268,34 @@ function scrollByCard(dir: 1 | -1) {
                    rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-gray-900
                    shadow-[0_1px_2px_rgba(0,0,0,0.06)] ring-1 ring-black/5 dark:ring-white/5"
           >
-            <NuxtLink :to="n.href || '#'" class="block p-4">
+            <NuxtLink :to="`/news/${n.slug}`" class="block p-4">
               <figure class="overflow-hidden rounded-2xl">
-                <img :src="img(n.image)" :alt="n.title" class="w-full h-48 object-cover" loading="lazy" decoding="async" />
+                <img
+                  :src="img(n.coverImage)"
+                  :alt="newsTitle(n)"
+                  class="w-full h-48 object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
               </figure>
-              <p class="mt-3 text-xs text-gray-500">{{ fmt(n.date) }}</p>
+
+              <p class="mt-3 text-xs text-gray-500">
+                {{ fmt(n.date) }}
+              </p>
               <h3 class="mt-1 text-[17px] leading-snug font-semibold text-gray-900 dark:text-gray-100">
-                {{ n.title }}
+                {{ newsTitle(n) }}
               </h3>
-              <p v-if="n.excerpt" class="mt-1 text-sm text-gray-700 dark:text-gray-300 line-clamp-2">
-                {{ n.excerpt }}
+              <p
+                v-if="newsExcerpt(n)"
+                class="mt-1 text-sm text-gray-700 dark:text-gray-300 line-clamp-2"
+              >
+                {{ newsExcerpt(n) }}
               </p>
               <span class="mt-2 inline-flex items-center gap-1.5 text-[#1D50A2] font-semibold text-sm">
-                Read more
+                {{ readMoreLabel }}
                 <svg class="size-4" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                  <path d="M4 10h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                  <path d="M10 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M4 10h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                  <path d="M10 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
               </span>
             </NuxtLink>
@@ -282,9 +311,8 @@ function scrollByCard(dir: 1 | -1) {
                  size-10 rounded-full bg-white text-gray-800 shadow-md ring-1 ring-black/10
                  hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1D50A2]"
         >
-          <!-- left arrow -->
           <svg class="mx-auto size-5" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            <path d="M12 5l-5 5 5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 5l-5 5 5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </button>
 
@@ -296,9 +324,8 @@ function scrollByCard(dir: 1 | -1) {
                  size-10 rounded-full bg-white text-gray-800 shadow-md ring-1 ring-black/10
                  hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1D50A2]"
         >
-          <!-- right arrow -->
           <svg class="mx-auto size-5" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            <path d="M8 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </button>
       </div>

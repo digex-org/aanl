@@ -1,7 +1,7 @@
 <!-- pages/news/index.vue -->
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useHead } from '#imports'
+import { useHead, useI18n } from '#imports'
 
 import { divisions } from '~/data/divisions'
 import {
@@ -12,8 +12,20 @@ import {
 import NewsFilterBar from '~/components/news/NewsFilterBar.vue'
 import NewsHeroSlider from '~/components/news/NewsHeroSlider.vue'
 import NewsCard from '~/components/news/NewsCard.vue'
+import SectionsUpcomingEvents from '~/components/sections/UpcomingEvents.vue'
 
-useHead({ title: 'News — AANL' })
+const { t } = useI18n()
+
+/* ---------- <head> with i18n ---------- */
+useHead(() => ({
+  title: t('news.page.metaTitle'),
+  meta: [
+    {
+      name: 'description',
+      content: t('news.page.metaDescription')
+    }
+  ]
+}))
 
 /* ---------- Raw data ---------- */
 const allNews = computed<NewsItem[]>(() => getAllNews())
@@ -34,25 +46,33 @@ type Category = (typeof categories)[number]
 
 const search = ref('')
 /**
- * selectedType here is effectively "division filter":
- * - "all"       → all divisions
+ * selectedType is effectively "division filter":
+ * - "all"        → all divisions
  * - divisionSlug → only that division’s news
  */
 const selectedType = ref<string>('all')
 const selectedCategory = ref<'all' | Category>('all')
 
+/* ---------- i18n helper for division labels ---------- */
+function divisionLabel(d: (typeof divisions)[number]): string {
+  const key = `divisions.items.${d.slug}.title`
+  const translated = t(key)
+  return translated === key ? d.title : translated
+}
+
 /**
  * Type options for the global news page:
- * - "all"                 → All divisions
- * - each division.slug    → That division’s news only
+ * - "all"              → All divisions
+ * - each division.slug → That division’s news only
+ * Labels are localized via i18n.
  */
-const typeOptions = [
-  { value: 'all', label: 'All divisions' },
+const typeOptions = computed(() => [
+  { value: 'all', label: t('news.filters.allDivisions') },
   ...divisions.map(d => ({
     value: d.slug,
-    label: d.title
+    label: divisionLabel(d)
   }))
-] as const
+])
 
 /* ---------- Image helper for cards / slider ---------- */
 const coverMods = import.meta.glob('~/assets/images/news/*', {
@@ -111,14 +131,15 @@ const gridNews = computed<NewsItem[]>(() =>
   filtered.value.slice(HERO_COUNT)
 )
 
-/* ---------- Optional date formatting helper (for future use) ---------- */
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
-}
+// /* ---------- Optional date formatting helper (for future use) ---------- */
+// function formatDate(iso: string): string {
+//   // You can later switch locale based on current language if needed
+//   return new Date(iso).toLocaleDateString('en-US', {
+//     year: 'numeric',
+//     month: 'long',
+//     day: 'numeric'
+//   })
+// }
 
 /* ---------- Filter bar hooks (optional) ---------- */
 function onApply() {
@@ -136,14 +157,13 @@ function onOpenDate() {
     <header class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10 pb-4">
       <div class="flex items-center justify-between gap-4 mb-6 sm:mb-8">
         <h2
-            id="contact-title"
-            class="inline-block text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white
-                relative
-                after:content-[''] after:block after:h-[3px] after:bg-gray-900 after:rounded-full after:mt-2"
+          id="news-title"
+          class="inline-block text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white
+                 relative
+                 after:content-[''] after:block after:h-[3px] after:bg-gray-900 after:rounded-full after:mt-2"
         >
-            News
+          {{ t('news.page.title') }}
         </h2>
-
       </div>
     </header>
 
@@ -159,16 +179,16 @@ function onOpenDate() {
         @open-date="onOpenDate"
       />
     </section>
-       <!-- Hero slider -->
-      <section v-if="hasNews && heroNews.length" class="grid grid-cols-1 gap-6">
-        <div>
-          <NewsHeroSlider :items="heroNews" />
-        </div>
-      </section>
+
+    <!-- Hero slider -->
+    <section
+      v-if="hasNews && heroNews.length"
+      class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-6 grid grid-cols-1 gap-6"
+    >
+      <NewsHeroSlider :items="heroNews" />
+    </section>
 
     <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-6 pb-12">
-
-
       <!-- Remaining news grid -->
       <section
         v-if="gridNews.length"
@@ -182,7 +202,7 @@ function onOpenDate() {
         />
       </section>
 
-      <!-- No grid items but we do have news (e.g. less than HERO_COUNT) -->
+      <!-- No extra grid items but we *do* have news (e.g. less than HERO_COUNT) -->
       <section
         v-else-if="hasNews"
         class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
@@ -194,30 +214,26 @@ function onOpenDate() {
           :image-src="coverSrc(n.coverImage)"
         />
       </section>
-      <p v-else
-      class="mt-10 text-center text-sm text-gray-600 dark:text-gray-300"
+
+      <!-- Empty state -->
+      <p
+        v-else
+        class="mt-10 text-center text-sm text-gray-600 dark:text-gray-300"
       >
-         No news found for this filter.
+        {{ t('news.page.noResults') }}
       </p>
+
       <!-- Upcoming events -->
-        <SectionsUpcomingEvents
-        section-bg-class="bg-[#0B1843] mt-20   border rounded-xl border-white/10"          
-        title-class="text-white"            
-          all-button-class="
+      <SectionsUpcomingEvents
+        class="mt-20"
+        section-bg-class="bg-[#0B1843] border rounded-xl border-white/10"
+        title-class="text-white"
+        :all-button-class="`
             text-white border-2 border-white/40 px-4 py-1.5 
             bg-[#0B1843] hover:bg-[#1D50A2] hover:text-white
             focus-visible:ring-orange-500
-        "
-        />
-
-
-      <!-- Empty state -->
-      <div
-        v-if="!hasNews"
-        class="mt-10 text-center text-sm text-gray-600 dark:text-gray-300"
-      >
-        No news found for this filter.
-      </div>
+        `"
+      />
     </main>
   </div>
 </template>

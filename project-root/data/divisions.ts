@@ -56,7 +56,7 @@ export const divisions: Division[] = [
     excerpt:
       'Scientific software, data pipelines, numerical simulations, network resources and HPC for experimental programs.',
     image: 'Leonardo_Phoenix_A_futuristic_experimental.webp',
-    accent: 'teal' // was 'blue'
+    accent: 'teal' 
   },
   {
     slug: 'applied-physics',

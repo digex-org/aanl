@@ -4,6 +4,7 @@ import divisions from './divisions.json'
 import divisionDetail from './division-detail.json'
 import events from './events.json'
 import common from './common.json'
+import news from './news.json'
 
 export default {
   nav,
@@ -11,5 +12,6 @@ export default {
   divisions,
   divisionDetail,
   events,
-  common
+  common,
+  news
 }
