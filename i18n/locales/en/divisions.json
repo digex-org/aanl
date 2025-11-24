@@ -1,0 +1,50 @@
+{
+  "grid": {
+    "title": "Divisions",
+    "seeMore": "See more"
+  },
+  "items": {
+    "experimental-physics": {
+      "title": "Experimental physics division",
+      "excerpt": "Longstanding research in high-energy experimental physics, including work with the Yerevan electron synchrotron (ARUS) up to 6 GeV."
+    },
+    "theoretical-physics": {
+      "title": "Matinyan center for theoretical physics",
+      "excerpt": "Theoretical physics at AANL with a focus on fundamental models, field theory, and modern mathematical methods."
+    },
+    "cosmology-astrophysics": {
+      "title": "Center for cosmology and astrophysics",
+      "excerpt": "Non-linear effects in cosmology, structure of the universe, gravitational dynamics, and time-series of complex systems."
+    },
+    "quantum-technologies": {
+      "title": "Division for Quantum Technologies",
+      "excerpt": "Quantum computation and theoretical calculations of quantum technologies with results published in leading journals."
+    },
+    "cosmic-rays": {
+      "title": "Cosmic ray division",
+      "excerpt": "Aragats high-mountain stations and SEVAN network studies; space weather, radiation, and atmospheric phenomena."
+    },
+    "computational-physics-it": {
+      "title": "Computational physics and IT division",
+      "excerpt": "Scientific software, data pipelines, numerical simulations, network resources and HPC for experimental programs."
+    },
+    "applied-physics": {
+      "title": "Applied physics research division",
+      "excerpt": "Materials science, radiation-matter interaction, optical/biological properties, and device-level applications."
+    },
+    "isotopes-production": {
+      "title": "Isotopes research and production division",
+      "excerpt": "Development of technologies for radioactive isotope production for medical and industrial applications."
+    },
+     "titles": {
+    "experimental-physics": "Experimental physics division",
+    "theoretical-physics": "Matinyan center for theoretical physics",
+    "cosmology-astrophysics": "Center for cosmology and astrophysics",
+    "quantum-technologies": "Division for Quantum Technologies",
+    "cosmic-rays": "Cosmic ray division",
+    "computational-physics-it": "Computational physics and IT division",
+    "applied-physics": "Applied physics research division",
+    "isotopes-production": "Isotopes research and production division"
+  }
+  }
+}

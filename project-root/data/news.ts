@@ -42,7 +42,7 @@ Tremendous work and huge efforts by a group of leading scholars, among them Nobe
 
 The article is dedicated to the great physicist John Archibald Wheeler and is available at https://doi.org/10.1140/epjp/s13360-023-04596-6.
     `.trim(),
-    date: '2024-12-01',
+    date: '2024-10-03',
     category: 'Science',
     divisionSlug: 'center-for-cosmology-and-astrophysics',
     coverImage: 'news-fetured-img.webp',
@@ -78,7 +78,7 @@ The AANL library has curated a special collection of works on particle physics a
 
 The collection includes key monographs, textbooks and review articles that have shaped the modern understanding of high-energy physics and cosmology.
     `.trim(),
-    date: '2024-12-22',
+    date: '2024-11-20',
     category: 'Library',
     divisionSlug: 'experimental-physics',
     coverImage: 'rubakov 1.webp'

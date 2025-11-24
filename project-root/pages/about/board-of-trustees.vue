@@ -102,7 +102,7 @@ const members = computed(() => BOARD_MEMBERS)
  * Local photo resolver for board images
  * (expects files in ~/assets/images/board/*)
  * ----------------------------------------------------- */
-const boardImageMods = import.meta.glob('~/assets/images/employees/*', {
+const boardImageMods = import.meta.glob('~/assets/images/partners/employees/*', {
   eager: true,
   import: 'default'
 }) as Record<string, string>

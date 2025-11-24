@@ -2,7 +2,9 @@
 export type Division = {
   slug: string
   title: string
+  titleKey?: string
   excerpt: string
+  excerptKey?: string
   image: string
   accent?: 'blue' | 'pink' | 'orange' | 'green' | 'purple' | 'teal'
 }

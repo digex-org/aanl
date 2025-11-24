@@ -2,11 +2,13 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { useHead } from '#imports'
+import { useHead, useI18n } from '#imports'
 
 import AppBreadcrumbs from '~/components/ui/AppBreadcrumbs.vue'
 import type { Crumb } from '~/composables/useBreadcrumbs'
 import { events, type EventItem } from '~/data/events'
+
+const { t } = useI18n()
 
 /* ---------- Route / current event ---------- */
 const route = useRoute()
@@ -16,43 +18,63 @@ const event = computed<EventItem | undefined>(() =>
   events.find(e => e.slug === slug.value)
 )
 
+/* ---------- i18n-aware event title & blurb ---------- */
+/**
+ * Uses events.items.<slug>.title / blurb if present,
+ * falls back to the static data from /data/events.ts.
+ */
+const eventTitle = computed(() => {
+  if (!event.value) return t('events.detail.fallbackTitle')
+  const key = `events.items.${event.value.slug}.title`
+  const translated = t(key)
+  return translated === key ? event.value.title : translated
+})
+
+const eventBlurb = computed(() => {
+  if (!event.value) return ''
+  const key = `events.items.${event.value.slug}.blurb`
+  const translated = t(key)
+  if (translated !== key) return translated
+  return event.value.blurb ?? ''
+})
+
 /* ---------- Breadcrumbs ---------- */
 const crumbs = computed<Crumb[]>(() => [
-  { label: 'Home', to: '/' },
-  { label: 'Events', to: '/events' },
-  { label: event.value?.title ?? 'Event' }
+  { label: t('nav.top.home'), to: '/' },
+  { label: t('events.page.breadcrumbTitle'), to: '/events' },
+  { label: eventTitle.value }
 ])
 
 /* ---------- SEO ---------- */
 useHead(() => ({
   title: event.value
-    ? `${event.value.title} — Events — AANL`
-    : 'Event — AANL'
+    ? `${eventTitle.value} — ${t('events.page.title')} — AANL`
+    : t('events.detail.metaFallbackTitle')
 }))
 
-/* ---------- Date helpers ---------- */
-const monthNames = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December'
+/* ---------- Date helpers (localized months) ---------- */
+const monthKeys = [
+  'january',
+  'february',
+  'march',
+  'april',
+  'may',
+  'june',
+  'july',
+  'august',
+  'september',
+  'october',
+  'november',
+  'december'
 ]
 
 const dayMonthYear = computed(() => {
   if (!event.value) return ''
   const d = new Date(event.value.date)
   const day = d.getDate()
-  const month = monthNames[d.getMonth()]
+  const monthKey = monthKeys[d.getMonth()]
   const year = d.getFullYear()
-  return `${day} ${month} ${year}`
+  return `${day} ${t(`events.months.${monthKey}`)} ${year}`
 })
 
 const dayNumber = computed(() => {
@@ -62,7 +84,9 @@ const dayNumber = computed(() => {
 
 const monthLabel = computed(() => {
   if (!event.value) return ''
-  return monthNames[new Date(event.value.date).getMonth()]
+  const d = new Date(event.value.date)
+  const monthKey = monthKeys[d.getMonth()]
+  return t(`events.months.${monthKey}`)
 })
 
 /* ---------- Accent → hero top bar gradient ---------- */
@@ -118,13 +142,13 @@ function accentGradient(e?: EventItem) {
                 <!-- Title + meta -->
                 <div>
                   <p class="text-xs sm:text-[13px] font-semibold uppercase tracking-wide text-white/80">
-                    Upcoming event
+                    {{ t('events.detail.heroBadge') }}
                   </p>
                   <h1
                     class="mt-1 text-2xl sm:text-3xl lg:text-[30px]
                            font-extrabold leading-snug sm:leading-snug"
                   >
-                    {{ event.title }}
+                    {{ eventTitle }}
                   </h1>
 
                   <div class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs sm:text-[13px] text-white/85">
@@ -137,7 +161,7 @@ function accentGradient(e?: EventItem) {
                 </div>
               </div>
 
-              <!-- Right: optional CTA (e.g. registration / calendar) -->
+              <!-- Right: CTA -->
               <div class="flex flex-col items-start sm:items-end gap-2 text-xs sm:text-[13px]">
                 <NuxtLink
                   to="/events"
@@ -146,7 +170,7 @@ function accentGradient(e?: EventItem) {
                          hover:bg-white/20 border border-white/30
                          transition-colors"
                 >
-                  All events
+                  {{ t('events.detail.allEventsCta') }}
                 </NuxtLink>
               </div>
             </div>
@@ -164,10 +188,10 @@ function accentGradient(e?: EventItem) {
         >
           <!-- Lead paragraph -->
           <p
-            v-if="event.blurb"
+            v-if="eventBlurb"
             class="text-sm sm:text-[15px] leading-relaxed text-gray-700 dark:text-gray-200"
           >
-            {{ event.blurb }}
+            {{ eventBlurb }}
           </p>
 
           <!-- Placeholder if no extra content yet -->
@@ -175,10 +199,8 @@ function accentGradient(e?: EventItem) {
             v-else
             class="text-sm sm:text-[15px] leading-relaxed text-gray-700 dark:text-gray-200"
           >
-            Detailed information about this event will be published soon.
+            {{ t('events.detail.bodyFallback') }}
           </p>
-
-          <!-- Here you can later add structured sections (agenda, speakers, location, etc.) -->
         </article>
       </section>
     </main>
@@ -187,14 +209,14 @@ function accentGradient(e?: EventItem) {
   <!-- Fallback if event not found -->
   <div v-else class="mx-auto max-w-3xl px-4 py-16 text-center dark:bg-gray-950">
     <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">
-      Event not found
+      {{ t('events.detail.notFoundTitle') }}
     </h1>
     <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">
-      Please check the URL or return to the
+      {{ t('events.detail.notFoundBody') }}
       <NuxtLink to="/events" class="text-[--brand-navy] hover:underline">
-        Events
+        {{ t('events.page.title') }}
       </NuxtLink>
-      page.
+      .
     </p>
   </div>
 </template>

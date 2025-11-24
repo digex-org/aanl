@@ -1,9 +1,12 @@
 <!-- components/sections/SectionsUpcomingEvents.vue -->
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from '#imports'
 import EventCard from '~/components/events/EventCard.vue'
 import { events as source } from '~/data/events'
 import type { EventItem } from '~/data/events'
+
+const { t } = useI18n()
 
 const props = withDefaults(defineProps<{
   title?: string
@@ -28,11 +31,11 @@ const props = withDefaults(defineProps<{
   /** When true, prefer upcoming events (date >= today) */
   onlyUpcoming?: boolean
 }>(), {
-  title: 'Upcoming Events',
+  // NOTE: we do NOT set defaults for `title` / `iconLabel` here,
+  // they come from i18n below so props can override them.
   allHref: '/events',
   iconTo: '/events',
   showCountBadge: true,
-  iconLabel: 'Open events calendar',
   sectionBgClass: 'bg-transparent dark:bg-gray-950',
   titleClass: 'text-gray-900 dark:text-white',
   allButtonClass:
@@ -83,45 +86,58 @@ const items = computed<EventItem[]>(() => {
 
   return finalList
 })
+
+// ---- i18n: section texts ----
+const titleText = computed(() =>
+  // allow prop override, otherwise use i18n
+  props.title ?? t('events.section.title')
+)
+
+const allEventsText = computed(() =>
+  t('events.section.all')
+)
+
+const iconLabelText = computed(() =>
+  props.iconLabel ?? t('events.section.iconLabel')
+)
 </script>
 
 <template>
   <!-- Section background is configurable -->
   <section :class="sectionBgClass" aria-labelledby="events-title">
-    <div class="mx-auto  max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-20">
       <!-- Heading -->
       <div class="mb-6 sm:mb-8 flex items-center justify-between">
         <!-- Left: title + counter -->
-      <div class="mb-6 sm:mb-8">
-         <h2
-          id="events-title"
-          class="text-2xl sm:text-3xl font-bold tracking-tight"
-       
-        >
-          <span
-            class="relative inline-block
-                   after:content-[''] after:block after:h-[3px]
-                   after:bg-current after:rounded-full after:mt-2"
-                   :class="titleClass"
+        <div class="mb-6 sm:mb-8">
+          <h2
+            id="events-title"
+            class="text-2xl sm:text-3xl font-bold tracking-tight"
           >
-            {{ title }}
-          </span>
+            <span
+              class="relative inline-block
+                     after:content-[''] after:block after:h-[3px]
+                     after:bg-current after:rounded-full after:mt-2"
+              :class="titleClass"
+            >
+              {{ titleText }}
+            </span>
 
-          <span
-           v-if="showCountBadge"
+            <span
+              v-if="showCountBadge"
               class="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full align-super bg-[#1D50A2] text-white text-[10px] font-semibold leading-none ring-2 ring-white dark:ring-gray-950"
-            aria-label="Total events shown"
-            title="Total events shown"
-          >
-            {{ items.length }}
-          </span>
-        </h2>
-      </div>
+              aria-label="Total events shown"
+              title="Total events shown"
+            >
+              {{ items.length }}
+            </span>
+          </h2>
+        </div>
 
         <!-- Right: circular icon button -->
         <NuxtLink
           :to="iconTo"
-          :aria-label="iconLabel"
+          :aria-label="iconLabelText"
           class="group inline-flex items-center justify-center
                  w-10 h-10 rounded-full
                  bg-[#1F6FD3] text-white
@@ -131,7 +147,7 @@ const items = computed<EventItem[]>(() => {
                  focus-visible:outline-none
                  focus-visible:ring-2 focus-visible:ring-[#1D50A2]
                  focus-visible:ring-offset-2"
-          title="Open events calendar"
+          :title="iconLabelText"
         >
           <IconsIconIvent class="w-8 h-8 shrink-0" />
         </NuxtLink>
@@ -165,7 +181,7 @@ const items = computed<EventItem[]>(() => {
                  transition"
           :class="allButtonClass"
         >
-          <span>All Events</span>
+          <span>{{ allEventsText }}</span>
           <svg
             width="26"
             height="15"

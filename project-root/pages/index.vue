@@ -8,7 +8,8 @@ useHead({
 
 <template>
   <!-- Hero / banner just for testing visual rhythm -->
-  <SectionsHeroSection /> 
+<SectionsHeroSection />
+
   <SectionsDivisionsGrid />
   <!-- Upcoming events  title="Next conferences & seminars"-->
 <SectionsUpcomingEvents

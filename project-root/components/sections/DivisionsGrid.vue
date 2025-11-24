@@ -1,24 +1,36 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useI18n } from '#imports'
 import { divisions as source, type Division } from '~/data/divisions'
 
-const props = withDefaults(defineProps<{
-  title?: string
-  items?: Division[]
-  allButtonClass?: string
-  allHref?: string
-  showAllButton?: boolean
-}>(), { 
-  title: 'Divisions',
-  allHref: '/divisions',
-  showAllButton: true,
-   allButtonClass:
-    'text-[#1D50A2] border-1 border-[#1D50A2] ' +
-    'hover:bg-[#1D50A2] hover:text-white ' +
-    'focus-visible:ring-[#1D50A2]',
- })
+const { t } = useI18n()
 
-const list = computed(() => props.items?.length ? props.items : source)
+const props = withDefaults(
+  defineProps<{
+    title?: string
+    items?: Division[]
+    allButtonClass?: string
+    allHref?: string
+    showAllButton?: boolean
+  }>(),
+  {
+    // no default for title → it's truly optional
+    allHref: '/divisions',
+    showAllButton: true,
+    allButtonClass:
+      'text-[#1D50A2] border-1 border-[#1D50A2] ' +
+      'hover:bg-[#1D50A2] hover:text-white ' +
+      'focus-visible:ring-[#1D50A2]'
+  }
+)
+
+const list = computed(() => (props.items?.length ? props.items : source))
+
+// i18n-aware title & button label with prop override
+const titleText = computed(() => props.title ?? t('divisions.grid.title'))
+const seeMoreText = computed(() => t('divisions.grid.seeMore'))
 </script>
+
 
 <template>
   <section class="dark:bg-gray-950" aria-labelledby="divisions-title">
@@ -29,7 +41,7 @@ const list = computed(() => props.items?.length ? props.items : source)
           class="inline-block text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white
                  relative after:content-[''] after:block after:h-[3px] after:bg-gray-900 after:rounded-full after:mt-2"
         >
-          {{ title }}
+          {{ titleText }}
         </h2>
       </div>
 
@@ -42,18 +54,18 @@ const list = computed(() => props.items?.length ? props.items : source)
         </div>
       </div>
 
-      <!-- Bottom-centered “All Divisions -->
+      <!-- Bottom-centered “All Divisions” -->
       <div v-if="showAllButton" class="mt-8 flex justify-center">
         <NuxtLink
           :to="allHref"
-                class="group inline-flex items-center justify-center gap-2
-                      w-[155px] h-10 rounded-[130px] px-1
-                      text-[15px] font-semibold
-                      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
-                      transition"
-                :class="allButtonClass"
+          class="group inline-flex items-center justify-center gap-2
+                 w-[155px] h-10 rounded-[130px] px-1
+                 text-[15px] font-semibold
+                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
+                 transition"
+          :class="allButtonClass"
         >
-          <span>See More</span>
+          <span>{{ seeMoreText }}</span>
           <svg
             width="26"
             height="15"
@@ -70,7 +82,6 @@ const list = computed(() => props.items?.length ? props.items : source)
           </svg>
         </NuxtLink>
       </div>
-
     </div>
   </section>
 </template>

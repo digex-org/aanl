@@ -1,0 +1,63 @@
+{
+  "section": {
+    "title": "Upcoming events",
+    "all": "All events",
+    "iconLabel": "Open events calendar"
+  },
+  "items": {
+    "evolving-universe-starobinsky-conference": {
+      "title": "Evolving Universe: Theory and Observations — Starobinsky Memorial Conference",
+      "blurb": "A conference dedicated to the memory of Prof. Alexei Starobinsky, focusing on recent advances in cosmology and theoretical physics."
+    },
+    "75th-anniversary-prof-akopov": {
+      "title": "75th anniversary of Prof. Norayr Akopov",
+      "blurb": "A series of lectures and events celebrating the 75th birthday of Prof. Norayr Akopov, highlighting his contributions to the development of physics."
+    },
+    "international-conference-particle-cosmology-rubakov": {
+      "title": "International Conference on Particle Physics and Cosmology dedicated to Prof. Rubakov",
+      "blurb": "An international conference where physicists discuss recent developments in particle physics and cosmology in honor of Prof. Rubakov."
+    },
+    "vi-matinyan-seminar-blue": {
+      "title": "VI Matinyan Seminar",
+      "blurb": "The sixth seminar in the Matinyan series, presenting recent research and results in theoretical physics."
+    },
+    "vi-matinyan-seminar-pink": {
+      "title": "VI Matinyan Seminar",
+      "blurb": "The sixth seminar in the Matinyan series, presenting recent research and results in theoretical physics."
+    },
+    "vi-matinyan-seminar-orange": {
+      "title": "VI Matinyan Seminar"
+    }
+  },
+  "page": {
+    "title": "Events",
+    "breadcrumbTitle": "Events",
+    "metaTitle": "Events — AANL",
+    "metaDescription": "Explore all upcoming seminars, conferences, commemorative meetings and other scientific events at A. I. Alikhanyan National Science Laboratory.",
+    "intro": "Explore all upcoming seminars, conferences, commemorative meetings and other scientific events at A. I. Alikhanyan National Science Laboratory.",
+    "gridTitle": "All upcoming events"
+  },
+  "detail": {
+    "heroBadge": "Upcoming event",
+    "allEventsCta": "All events",
+    "bodyFallback": "Detailed information about this event will be published soon.",
+    "notFoundTitle": "Event not found",
+    "notFoundBody": "Please check the URL or return to the",
+    "fallbackTitle": "Event",
+    "metaFallbackTitle": "Event — AANL"
+  },
+  "months": {
+    "january": "January",
+    "february": "February",
+    "march": "March",
+    "april": "April",
+    "may": "May",
+    "june": "June",
+    "july": "July",
+    "august": "August",
+    "september": "September",
+    "october": "October",
+    "november": "November",
+    "december": "December"
+  }
+}

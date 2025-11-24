@@ -72,6 +72,38 @@ const demo: NewsItem[] = [
     image: 'rubakov 1.webp',
     href: '/news/rubakov-library-article',
     excerpt: 'Leading researchers discussed novel directions in early-universe physics.'
+  },
+   {
+    id: 5,
+    title: 'Evolving Universe: Theory And Observations Starobinsky Memorial Conference October',
+    date: '2024-05-31',
+    image: 'news-fetured-img.webp',
+    href: '/news/11-february-international-day-of-women-and-girls-in-science',
+    excerpt: 'A multi-day conference on cosmology, gravity and inflationary theory.'
+  },
+  {
+    id: 6,
+    title: 'The first release of lares–2 space experiment results on testing fundamental physics',
+    date: '2023-12-22',
+    image: 'Gurzadyan_Cosmo 1.webp',
+    href: '/news/11-february-international-day-of-women-and-girls-in-science',
+    excerpt: 'Early analysis confirms measurement stability and improved sensitivity.'
+  },
+  {
+    id: 7,
+    title: '75th anniversary of prof. Norayr Akopov',
+    date: '2023-12-22',
+    image: 'akopovbd 1.webp',
+    href: '/news/international-conference-on-particle-physics-and-cosmology',
+    excerpt: 'A commemorative event honoring contributions to particle physics.'
+  },
+  {
+    id: 8,
+    title: 'International Conference on Particle Physics and Cosmology dedicated to Prof. Rubakov memory',
+    date: '2023-12-22',
+    image: 'rubakov 1.webp',
+    href: '/news/rubakov-library-article',
+    excerpt: 'Leading researchers discussed novel directions in early-universe physics.'
   }
 ]
 

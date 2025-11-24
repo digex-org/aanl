@@ -1,9 +1,12 @@
 <!-- components/events/EventsGrid.vue -->
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from '#imports'
 import EventCard from '~/components/events/EventCard.vue'
 import { events as source } from '~/data/events'
 import type { EventItem } from '~/data/events'
+
+const { t } = useI18n()
 
 const props = withDefaults(defineProps<{
   title?: string
@@ -13,7 +16,8 @@ const props = withDefaults(defineProps<{
   /** If true, sort events by date ascending (upcoming first) */
   sortByDate?: boolean
 }>(), {
-  title: 'Events',
+  // let i18n provide the default, avoid TS "exactOptionalPropertyTypes" warning
+  title: undefined,
   showCountBadge: true,
   sortByDate: true
 })
@@ -35,6 +39,14 @@ const list = computed<EventItem[]>(() => {
     return da - db
   })
 })
+
+/** i18n-aware title (prop overrides translation) */
+const titleText = computed(() => props.title ?? t('events.grid.title'))
+
+/** i18n-aware aria label for the count badge */
+const totalShownLabel = computed(() =>
+  t('events.grid.totalShown', { count: list.value.length })
+)
 </script>
 
 <template>
@@ -42,30 +54,28 @@ const list = computed<EventItem[]>(() => {
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-20">
       <!-- Heading -->
       <div class="mb-6 sm:mb-8">
-         <h2
-          id="events-title"
+        <h2
+          id="events-grid-title"
           class="text-2xl sm:text-3xl font-bold tracking-tight"
-       
         >
           <span
             class="relative inline-block
                    after:content-[''] after:block after:h-[3px]
                    after:bg-current after:rounded-full after:mt-2"
           >
-            {{ title }}
+            {{ titleText }}
           </span>
 
           <span
-           v-if="showCountBadge"
-              class="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full align-super bg-[#1D50A2] text-white text-[10px] font-semibold leading-none ring-2 ring-white dark:ring-gray-950"
-            aria-label="Total events shown"
-            title="Total events shown"
+            v-if="showCountBadge"
+            class="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full align-super bg-[#1D50A2] text-white text-[10px] font-semibold leading-none ring-2 ring-white dark:ring-gray-950"
+            :aria-label="totalShownLabel"
+            :title="totalShownLabel"
           >
             {{ list.length }}
           </span>
         </h2>
       </div>
-
 
       <!-- Grid of event cards -->
       <div

@@ -1,6 +1,7 @@
 <!-- components/events/EventCard.vue -->
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from '#imports'
 import type { EventItem } from '~/data/events'
 
 const props = defineProps<{
@@ -8,7 +9,10 @@ const props = defineProps<{
   index?: number
 }>()
 
-const monthNames = [
+const { t, te } = useI18n()
+
+// Month keys used for i18n lookup
+const monthKeys = [
   'january',
   'february',
   'march',
@@ -25,11 +29,23 @@ const monthNames = [
 
 function parts(iso: string) {
   const d = new Date(iso)
+  const monthKey = monthKeys[d.getMonth()] ?? 'january'
+
   return {
     day: String(d.getDate()),
-    month: monthNames[d.getMonth()]
+    monthKey
   }
 }
+
+// Computed date parts with localized month label
+const dateParts = computed(() => {
+  const base = parts(props.event.date)
+  const monthLabel = t(`common.months.${base.monthKey}`)
+  return {
+    ...base,
+    monthLabel
+  }
+})
 
 // Map accent to Tailwind classes
 function topAccent(accent?: EventItem['accent'], i?: number) {
@@ -56,6 +72,25 @@ const toUrl = computed(() => {
   if (!href) return '#'
   return href.startsWith('/') ? href : `/${href}`
 })
+
+/**
+ * i18n-aware title + blurb based on event.slug
+ * Falls back to original event.title / event.blurb if translation is missing.
+ *
+ * Keys:
+ *  - events.items.<slug>.title
+ *  - events.items.<slug>.blurb
+ */
+const titleKey = computed(() => `events.items.${props.event.slug}.title`)
+const blurbKey = computed(() => `events.items.${props.event.slug}.blurb`)
+
+const titleText = computed(() =>
+  te(titleKey.value) ? t(titleKey.value) : props.event.title
+)
+
+const blurbText = computed(() =>
+  te(blurbKey.value) ? t(blurbKey.value) : (props.event.blurb ?? '')
+)
 </script>
 
 <template>
@@ -72,12 +107,12 @@ const toUrl = computed(() => {
       <div class="flex items-start gap-3">
         <div class="rounded-md bg-[#1D50A2] text-white px-2.5 py-1 leading-none">
           <span class="block text-base font-bold">
-            {{ parts(event.date).day }}
+            {{ dateParts.day }}
           </span>
         </div>
         <div class="mt-0.5">
           <div class="text-xs font-semibold uppercase tracking-wide text-[#1D50A2]">
-            {{ parts(event.date).month }}
+            {{ dateParts.monthLabel }}
           </div>
           <div class="text-[11px] text-gray-500 dark:text-gray-400">
             {{ event.time || '' }}
@@ -93,16 +128,16 @@ const toUrl = computed(() => {
           :to="toUrl"
           class="hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1D50A2] rounded"
         >
-          {{ event.title }}
+          {{ titleText }}
         </NuxtLink>
       </h3>
 
       <!-- Optional blurb -->
       <p
-        v-if="event.blurb"
+        v-if="blurbText"
         class="mt-1 text-sm text-gray-600 dark:text-gray-300 line-clamp-2"
       >
-        {{ event.blurb }}
+        {{ blurbText }}
       </p>
     </div>
   </article>

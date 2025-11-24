@@ -1,9 +1,35 @@
 <!-- components/layout/Header.vue -->
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, ref, watch, computed } from 'vue'
-import { useRoute } from '#imports'
+import { useRoute, useI18n } from '#imports'
 import NAV, { mobileNavLinks } from '~/data/navigation'
 import GlobalSearchOverlay from '~/components/search/GlobalSearchOverlay.vue'
+import LanguageSelect from '~/components/common/LanguageSelect.vue'
+
+/** --- i18n helpers --- */
+const { t } = useI18n()
+
+const navText = (item: { label: string; labelKey?: string | undefined }) => {
+  if (item.labelKey) {
+    const translated = t(item.labelKey)
+    // If translation exists and is different from the key, use it
+    if (translated && translated !== item.labelKey) {
+      return translated
+    }
+  }
+  // Fallback to static label from navigation.ts
+  return item.label
+}
+
+const groupTitle = (group: { title?: string | undefined; titleKey?: string | undefined }) => {
+  if (group.titleKey) {
+    const translated = t(group.titleKey)
+    if (translated && translated !== group.titleKey) {
+      return translated
+    }
+  }
+  return group.title ?? ''
+}
 
 /** --- State --- */
 const route = useRoute()
@@ -67,22 +93,30 @@ const mobileNav = computed(() =>
   NAV.map(item => {
     const sections =
       item.mega?.columns?.map(col => {
-        const flat = [
+        const flatItems = [
           ...(col.items ?? []),
           ...((col.groups ?? []).flatMap(g => g.items ?? [])),
         ]
-        return { title: col.title, items: flat }
+        return {
+          title: col.title,
+          titleKey: col.titleKey,
+          items: flatItems
+        }
       }) ?? []
+
     return {
       label: item.label,
+      labelKey: item.labelKey,
       href: item.href,
       sections
     }
   })
 )
 
-const mobileLinks = mobileNavLinks(NAV) // kept in case you use it elsewhere
+// Optional flattened list, kept if you need it elsewhere
+const mobileLinks = mobileNavLinks(NAV)
 </script>
+
 
 <template>
   <header
@@ -90,7 +124,7 @@ const mobileLinks = mobileNavLinks(NAV) // kept in case you use it elsewhere
     class="relative bg-white border-b border-slate-200"
     data-nav-root
   >
-    <div class="container mx-auto px-4 md:px-8 xl:px-[141px]">
+    <div class="mx-auto px-2 md:px-4 xl:px-[40px]">
       <!-- Top bar -->
       <div class="h-[66px] flex items-center justify-between gap-6">
         <!-- Logo -->
@@ -98,7 +132,7 @@ const mobileLinks = mobileNavLinks(NAV) // kept in case you use it elsewhere
           <NuxtImg
             src="/images/logos/main-logo.svg"
             alt="A. Alikhanyan National Laboratory"
-            class="h-[40px] w-auto"
+            class="h-10 w-auto"
           />
         </NuxtLink>
 
@@ -119,7 +153,7 @@ const mobileLinks = mobileNavLinks(NAV) // kept in case you use it elsewhere
                 class="group inline-flex items-center gap-1 font-semibold text-[16px] leading-6 text-[#1A2236] hover:text-[#1D50A2] transition"
               >
                 <span :class="isActive(item.href) ? 'underline underline-offset-4 decoration-2' : ''">
-                  {{ item.label }}
+                  {{ navText(item) }}
                 </span>
               </NuxtLink>
 
@@ -135,7 +169,7 @@ const mobileLinks = mobileNavLinks(NAV) // kept in case you use it elsewhere
                 @keydown.space.prevent="openDesktopKey = item.label"
               >
                 <span :class="isActive(item.href) ? 'underline underline-offset-4 decoration-2' : ''">
-                  {{ item.label }}
+                  {{ navText(item) }}
                 </span>
                 <svg
                   class="h-4 w-4 transition-transform duration-200"
@@ -171,14 +205,8 @@ const mobileLinks = mobileNavLinks(NAV) // kept in case you use it elsewhere
             <IconsIconSearch class="h-4 w-4" />
           </button>
 
-          <!-- Locale -->
-          <NuxtLink to="/" class="inline-flex items-center" aria-label="Հայերեն">
-            <img
-              src="/icons/flags/am.svg"
-              alt="AM"
-              class="h-[17.14px] w-[24px] rounded-[2px] shadow-[0_0_0_1px_rgba(0,0,0,0.06)]"
-            />
-          </NuxtLink>
+          <!-- Locale dropdown (desktop) -->
+          <LanguageSelect />
         </div>
 
         <!-- Mobile burger -->
@@ -204,7 +232,7 @@ const mobileLinks = mobileNavLinks(NAV) // kept in case you use it elsewhere
         @mouseenter="openByKey(currentMega.label)"
         @mouseleave="closeDelayed()"
         role="region"
-        :aria-label="`${currentMega.label} menu`"
+        :aria-label="`${navText(currentMega)} menu`"
       >
         <div class="container mx-auto px-4 md:px-8 xl:px-[141px] py-8">
           <div
@@ -222,10 +250,10 @@ const mobileLinks = mobileNavLinks(NAV) // kept in case you use it elsewhere
               class="min-w-[220px]"
             >
               <p
-                v-if="col.title"
+                v-if="col.title || col.titleKey"
                 class="px-2 pb-2 text-[13px] font-semibold text-slate-500 uppercase tracking-wide"
               >
-                {{ col.title }}
+                {{ groupTitle(col) }}
               </p>
 
               <!-- Plain items -->
@@ -237,7 +265,7 @@ const mobileLinks = mobileNavLinks(NAV) // kept in case you use it elsewhere
                   class="px-2 py-2 rounded-lg text-[15px] text-slate-700 hover:bg-slate-50 hover:text-slate-900"
                   @click="openDesktopKey = null"
                 >
-                  {{ link.label }}
+                  {{ navText(link) }}
                 </NuxtLink>
               </div>
 
@@ -249,10 +277,10 @@ const mobileLinks = mobileNavLinks(NAV) // kept in case you use it elsewhere
                   class="border-t border-slate-100 pt-3 first:border-0 first:pt-0"
                 >
                   <p
-                    v-if="g.title"
+                    v-if="g.title || g.titleKey"
                     class="px-2 pb-2 text-[12px] font-medium text-slate-500 uppercase tracking-wide"
                   >
-                    {{ g.title }}
+                    {{ groupTitle(g) }}
                   </p>
                   <div class="flex flex-col">
                     <NuxtLink
@@ -262,7 +290,7 @@ const mobileLinks = mobileNavLinks(NAV) // kept in case you use it elsewhere
                       class="px-2 py-2 rounded-lg text-[15px] text-slate-700 hover:bg-slate-50 hover:text-slate-900"
                       @click="openDesktopKey = null"
                     >
-                      {{ link.label }}
+                      {{ navText(link) }}
                     </NuxtLink>
                   </div>
                 </section>
@@ -285,7 +313,7 @@ const mobileLinks = mobileNavLinks(NAV) // kept in case you use it elsewhere
             class="block rounded-md px-3 py-2 text-[16px] font-semibold text-[#1A2236] hover:bg-slate-50"
             @click="openMobile = false"
           >
-            {{ item.label }}
+            {{ navText(item) }}
           </NuxtLink>
 
           <!-- Accordion with sections -->
@@ -293,7 +321,7 @@ const mobileLinks = mobileNavLinks(NAV) // kept in case you use it elsewhere
             <summary
               class="flex items-center justify-between cursor-pointer select-none rounded-md px-3 py-2 text-[16px] font-semibold text-[#1A2236] hover:bg-slate-50"
             >
-              <span class="flex-1">{{ item.label }}</span>
+              <span class="flex-1">{{ navText(item) }}</span>
               <svg
                 class="ml-2 h-4 w-4 text-slate-500 transition-transform group-open:rotate-180"
                 viewBox="0 0 20 20" fill="none" aria-hidden="true"
@@ -316,10 +344,10 @@ const mobileLinks = mobileNavLinks(NAV) // kept in case you use it elsewhere
                 class="mb-3 last:mb-0"
               >
                 <p
-                  v-if="sec.title"
+                  v-if="sec.title || sec.titleKey"
                   class="px-2 pb-1 text-[12px] font-medium text-slate-500 uppercase tracking-wide"
                 >
-                  {{ sec.title }}
+                  {{ groupTitle(sec) }}
                 </p>
                 <div class="flex flex-col">
                   <NuxtLink
@@ -329,7 +357,7 @@ const mobileLinks = mobileNavLinks(NAV) // kept in case you use it elsewhere
                     class="px-2 py-2 rounded-md text-[15px] text-slate-700 hover:bg-slate-50"
                     @click="openMobile = false"
                   >
-                    {{ link.label }}
+                    {{ navText(link) }}
                   </NuxtLink>
                 </div>
               </div>
@@ -350,13 +378,8 @@ const mobileLinks = mobileNavLinks(NAV) // kept in case you use it elsewhere
             <IconsIconSearch class="h-5 w-5" />
           </button>
 
-          <NuxtLink to="/" aria-label="Հայերեն">
-            <img
-              src="/icons/flags/am.svg"
-              alt="AM"
-              class="h-[17.14px] w-[24px] rounded-[2px] shadow-[0_0_0_1px_rgba(0,0,0,0.06)]"
-            />
-          </NuxtLink>
+          <!-- Locale dropdown (mobile) -->
+          <LanguageSelect />
         </div>
       </div>
     </div>

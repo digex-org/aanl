@@ -1,17 +1,41 @@
 <!-- pages/events/index.vue -->
 <script setup lang="ts">
-import { useHead } from '#imports'
+import { computed } from 'vue'
+import { useHead, useI18n } from '#imports'
 
 import AppBreadcrumbs from '~/components/ui/AppBreadcrumbs.vue'
 import EventsGrid from '~/components/events/EventsGrid.vue'
 import type { Crumb } from '~/composables/useBreadcrumbs'
 
-useHead({ title: 'Events — AANL' })
+const { t } = useI18n()
 
-const crumbs: Crumb[] = [
-  { label: 'Home', to: '/' },
-  { label: 'Events' }
-]
+/**
+ * SEO (reactive to locale)
+ */
+useHead(() => ({
+  title: t('events.page.metaTitle'),
+  meta: [
+    {
+      name: 'description',
+      content: t('events.page.metaDescription')
+    }
+  ]
+}))
+
+/**
+ * Breadcrumbs (translated)
+ */
+const crumbs = computed<Crumb[]>(() => [
+  { label: t('nav.top.home'), to: '/' },
+  { label: t('events.page.breadcrumbTitle') }
+])
+
+/**
+ * Page copy (translated)
+ */
+const pageTitle = computed(() => t('events.page.title'))
+const introText = computed(() => t('events.page.intro'))
+const gridTitle = computed(() => t('events.page.gridTitle'))
 </script>
 
 <template>
@@ -29,18 +53,17 @@ const crumbs: Crumb[] = [
                    relative after:content-[''] after:block after:h-[3px]
                    after:bg-gray-900 after:rounded-full after:mt-2"
           >
-            Events
+            {{ pageTitle }}
           </h1>
         </header>
 
         <p class="text-sm sm:text-[15px] text-gray-600 dark:text-gray-300 max-w-3xl">
-          Explore all upcoming seminars, conferences, commemorative meetings and other
-          scientific events at A. I. Alikhanyan National Science Laboratory.
+          {{ introText }}
         </p>
       </section>
 
       <!-- Main events listing (grid with EventCard items) -->
-      <EventsGrid title="All upcoming events" />
+      <EventsGrid :title="gridTitle" />
     </main>
   </div>
 </template>
