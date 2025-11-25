@@ -134,6 +134,18 @@ export const NAV: TopLevelNav[] = [
     icon: '/images/nav/Leonardo_Phoenix_Photorealistic_depiction_of_quantum_physics.webp',
     mega: {
       columns: [
+                {
+          title: 'News',
+          titleKey: 'nav.news.eventsHeading',
+          items: [
+            {
+              label: 'All News',
+              labelKey: 'nav.news.news',
+              href: '/news',
+
+            }
+          ]
+        },
         {
           title: 'Events',
           titleKey: 'nav.news.eventsHeading',
