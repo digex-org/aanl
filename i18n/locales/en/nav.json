@@ -1,66 +1,73 @@
+
 {
-  "top": {
-    "home": "Home",
-    "about": "About",
-    "divisions": "Divisions",
-    "science": "Science",
-    "news": "News",
-    "education": "Education",
-    "contact": "Contact"
-  },
+  "nav": {
+      "top": {
+        "home": "Home",
+        "about": "About",
+        "divisions": "Divisions",
+        "science": "Science",
+        "news": "News",
+        "education": "Education",
+        "contact": "Contact"
+      },
 
-  "about": {
-    "mission": "Mission",
-    "history": "History",
-    "boardOfTrustees": "Board of trustees"
-  },
+      "about": {
+        "mission": "Mission",
+        "history": "History",
+        "boardOfTrustees": "Board of trustees"
+      },
 
-  "divisions": {
-    "researchDivisions": "Research divisions",
-    "experimentalPhysics": "Experimental physics",
-    "cosmologyAstrophysics": "Cosmology & astrophysics",
-    "quantumTechnologies": "Quantum technologies",
-    "appliedPhysics": "Applied physics"
-  },
+      "divisions": {
+        "researchDivisions": "Research divisions",
+        "experimentalPhysics": "Experimental physics",
+        "cosmologyAstrophysics": "Cosmology & astrophysics",
+        "quantumTechnologies": "Quantum technologies",
+        "appliedPhysics": "Applied physics"
+      },
 
-  "science": {
-    "eventsHeading": "Events",
-    "seminars": "Seminars"
-  },
+      "science": {
+        "eventsHeading": "Events",
+        "seminars": "Seminars"
+      },
 
-  "news": {
-    "eventsHeading": "Events",
-    "seminars": "Seminars"
-  },
+      "news": {
+        "eventsHeading": "Events",
+        "seminars": "Seminars"
+      },
 
-  "education": {
-    "postgrad": {
-      "title": "Postgraduate studies",
-      "description": "Description",
-      "admissionProcedure": "Admission procedure",
-      "availableTraining": "Available training",
-      "distanceLearning": "Distance learning",
-      "applicationForm": "Application form",
-      "program": "Program",
-      "exams": "Exams",
-      "schedule": "Schedule",
-      "students": "Students",
-      "firstStage": "1st stage admission",
-      "secondStage": "2nd stage admission",
-      "distanceFirstStage": "1st stage admission",
-      "distanceSecondStage": "2nd stage admission"
-    },
-    "lecturers": {
-      "title": "Lecturers",
-      "requiredDocuments": "Required documents",
-      "examSchedule": "Exam schedule",
-      "tuitionFees": "Important documents (tuition fee amount)",
-      "foreignStudents": "Foreign students",
-      "programs": "Educational and development programs (courses)",
-      "professionalCouncil": "DDK 024 Physics Professional Council",
-      "a0402": "A 04 02",
-      "a0414": "A 04 14",
-      "nearbyDefenses": "Nearby defenses"
+      "education": {
+        "postgrad": {
+          "title": "Postgraduate studies",
+          "description": "Description",
+          "admissionProcedure": "Admission procedure",
+          "availableTraining": "Available training",
+          "distanceLearning": "Distance learning",
+          "applicationForm": "Application form",
+          "program": "Program",
+          "exams": "Exams",
+          "schedule": "Schedule",
+          "students": "Students",
+          "firstStage": "1st stage admission",
+          "secondStage": "2nd stage admission",
+          "distanceFirstStage": "1st stage admission",
+          "distanceSecondStage": "2nd stage admission"
+        },
+        "lecturers": {
+          "title": "Lecturers",
+          "requiredDocuments": "Required documents",
+          "examSchedule": "Exam schedule",
+          "tuitionFees": "Important documents (tuition fee amount)",
+          "foreignStudents": "Foreign students",
+          "programs": "Educational and development programs (courses)",
+          "professionalCouncil": "DDK 024 Physics Professional Council",
+          "a0402": "A 04 02",
+          "a0414": "A 04 14",
+          "nearbyDefenses": "Nearby defenses"
+        }
+      },
+     "language": {
+        "english": "English",
+        "armenian": "Armenian"
+      }
     }
-  }
 }

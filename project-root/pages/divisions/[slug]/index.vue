@@ -1,4 +1,3 @@
-<!-- pages/divisions/[slug].vue -->
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRoute, useI18n, useHead } from '#imports'
@@ -9,7 +8,7 @@ import UiSwiper from '~/components/common/UiSwiper.vue'
 import AppBreadcrumbs from '~/components/ui/AppBreadcrumbs.vue'
 
 /* ---------- i18n ---------- */
-const { t } = useI18n()
+const { t, te } = useI18n()
 
 /* ---------- Route / entity ---------- */
 const route = useRoute()
@@ -25,11 +24,10 @@ const division = computed<Division | undefined>(() =>
  */
 const divisionTitle = computed(() => {
   if (!division.value) return ''
-  const key = `divisions.titles.${division.value.slug}`
-  const translated = t(key)
-  return translated === key ? division.value.title : translated
+  const s = division.value.slug
+  const key = `divisions.items.${s}.title`
+  return te(key) ? t(key) : division.value.title
 })
-
 
 /* ---------- Breadcrumbs (top-left on banner) ---------- */
 const { crumbs, jsonLd } = useBreadcrumbs({
@@ -61,30 +59,43 @@ const bannerSrc = computed(
 )
 const relatedSrc = (file: string) => byFile[file] || ''
 
-/* ---------- Body copy (localized, with English fallback) ---------- */
+/* ---------- Body copy (localized, with per-division fallback) ---------- */
 
-// default English body texts keyed by slug (you can extend this per division)
+// Optional: per-division English bodies
 const defaultBodies: Record<string, string> = {
-  'experimental-physics': `AANL Experimental Physics Division (EPD) has a long lasting tradition of research in high energy experimental physics in a wide range of topics. During 1970–1991s, the Yerevan electron synchrotron (ARUS) operated productively and many significant results were obtained. Physicists of EPD succeeded in receiving a number of important results which allowed to promote the understanding of hadron and nuclei structure and fundamental properties. The reputation of the institute as accelerator physics and accelerator center helps to preserve and develop international cooperation with scientific centers in the USA, Germany, Switzerland and others, fully incorporating EPD in their experimental research programs.
+  'experimental-physics': `
+AANL Experimental Physics Division (EPD) has a long lasting tradition of research in high energy experimental physics in a wide range of topics. During 1970–1991s, the Yerevan electron synchrotron (ARUS) operated productively and many significant results were obtained. Physicists of EPD succeeded in receiving a number of important results which allowed to promote the understanding of hadron and nuclei structure and fundamental properties. The reputation of the institute as accelerator physics and accelerator center helps to preserve and develop international cooperation with scientific centers in the USA, Germany, Switzerland and others, fully incorporating EPD in their experimental research programs.
 
-Current programs include low-energy nuclear physics investigations on the electron linear accelerator LUE-75 and proton cyclotron C18/18, nuclear reaction studies, detector calibrations and test-beams, and research of materials science.`
+Current programs include low-energy nuclear physics investigations on the electron linear accelerator LUE-75 and proton cyclotron C18/18, nuclear reaction studies, detector calibrations and test-beams, and research of materials science.
+`.trim()
 }
 
-const bodyCopy = computed(() => {
-  const key = 'divisionDetail.body'
-  const translated = t(key)
+// Generic English fallback (currently same as experimental-physics)
+const fallbackBody =
+  defaultBodies['experimental-physics'] ||
+  'Division description is coming soon.'
 
-  // if key not found, vue-i18n returns the key string itself
-  if (translated !== key) {
-    return translated
+const bodyCopy = computed(() => {
+  if (!division.value) return ''
+
+  const s = division.value.slug
+
+  // 1) Try slug-based translation: divisionDetail.bodies.<slug>
+  const slugKey = `divisionDetail.bodies.${s}`
+  if (te(slugKey)) {
+    return t(slugKey) as string
   }
 
-  // Fallback: your original English text
-  return `AANL Experimental Physics Division (EPD) has a long lasting tradition of research in high energy experimental physics in a wide range of topics. During 1970–1991s, the Yerevan electron synchrotron (ARUS) operated productively and many significant results were obtained. Physicists of EPD succeeded in receiving a number of important results which allowed to promote the understanding of hadron and nuclei structure and fundamental properties. The reputation of the institute as accelerator physics and accelerator center helps to preserve and develop international cooperation with scientific centers in the USA, Germany, Switzerland and others, fully incorporating EPD in their experimental research programs.
+  // 2) Try shared body: divisionDetail.body
+  const genericKey = 'divisionDetail.body'
+  const generic = t(genericKey) as string
+  if (generic !== genericKey) {
+    return generic
+  }
 
-Current programs include low-energy nuclear physics investigations on the electron linear accelerator LUE-75 and proton cyclotron C18/18, nuclear reaction studies, detector calibrations and test-beams, and research of materials science.`
+  // 3) Fall back to defaultBodies[slug] or global fallback
+  return defaultBodies[s] || fallbackBody
 })
-
 
 /* ---------- Quick Access (collapsible) ---------- */
 
@@ -108,9 +119,7 @@ const qaItems = computed(() => [
   }
 ])
 
-/* ---------- Collaborations (sample) ----------
-   You can later move these into i18n JSON as well (e.g. divisionDetail.collaborations.<slug>[])
------------------------------------------------- */
+/* ---------- Collaborations (can also be moved to i18n later) ---------- */
 type Collab = { text: string; links?: Array<{ label: string; href: string }> }
 
 const collaborations = ref<Collab[]>([
@@ -172,24 +181,23 @@ const collaborations = ref<Collab[]>([
   }
 ])
 
-/* ---------- Related ---------- */
+/* ---------- Related divisions ---------- */
 const related = computed(() =>
   divisions.filter(d => d.slug !== slug.value).slice(0, 8)
 )
 
 /**
  * Localized helpers for related cards
+ * Keys: divisions.items.<slug>.title / excerpt
  */
 const relatedTitle = (d: Division) => {
   const key = `divisions.items.${d.slug}.title`
-  const translated = t(key)
-  return translated === key ? d.title : translated
+  return te(key) ? t(key) : d.title
 }
 
 const relatedExcerpt = (d: Division) => {
   const key = `divisions.items.${d.slug}.excerpt`
-  const translated = t(key)
-  return translated === key ? d.excerpt : translated
+  return te(key) ? t(key) : d.excerpt
 }
 
 /* UiSwiper breakpoints (can be overridden per use) */
@@ -201,6 +209,7 @@ const relatedBreakpoints = {
   1024: { slidesPerView: 4, spaceBetween: 24 }
 }
 </script>
+
 
 <template>
   <div v-if="division" class="dark:bg-gray-950">

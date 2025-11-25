@@ -1,7 +1,7 @@
 <!-- components/events/EventCard.vue -->
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useI18n } from '#imports'
+import { useI18n, useLocalePath } from '#imports'
 import type { EventItem } from '~/data/events'
 
 const props = defineProps<{
@@ -10,6 +10,7 @@ const props = defineProps<{
 }>()
 
 const { t, te } = useI18n()
+const localePath = useLocalePath()
 
 // Month keys used for i18n lookup
 const monthKeys = [
@@ -37,7 +38,6 @@ function parts(iso: string) {
   }
 }
 
-// ✅ Use events.months.* (same as events/[slug].vue)
 const dateParts = computed(() => {
   const base = parts(props.event.date)
   const monthLabel = t(`events.months.${base.monthKey}`)
@@ -63,12 +63,18 @@ function topAccent(accent?: EventItem['accent'], i?: number) {
 }
 
 /**
- * Always produce an absolute URL for NuxtLink.
+ * ✅ Locale-aware URL for NuxtLink.
+ * Keeps /hy prefix when locale is Armenian.
  */
 const toUrl = computed(() => {
   const href = props.event.href || ''
   if (!href) return '#'
-  return href.startsWith('/') ? href : `/${href}`
+
+  // normalize to a path like "/events/slug"
+  const normalized = href.startsWith('/') ? href : `/${href}`
+
+  // let nuxt-i18n add /hy when needed
+  return localePath(normalized)
 })
 
 // i18n-aware title + blurb
@@ -83,7 +89,6 @@ const blurbText = computed(() =>
   te(blurbKey.value) ? t(blurbKey.value) : (props.event.blurb ?? '')
 )
 </script>
-
 
 <template>
   <article

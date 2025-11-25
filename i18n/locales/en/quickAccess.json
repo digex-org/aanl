@@ -1,0 +1,13 @@
+
+{
+  "quickAccess": {
+    "title": "Quick access",
+    "collapseAll": "Collapse all",
+    "open": "Open",
+    "items": {
+      "employees": "Employees",
+      "news": "News",
+      "seminars": "Seminars"
+    }
+  }
+}

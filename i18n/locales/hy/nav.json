@@ -1,66 +1,72 @@
-{
-  "top": {
-    "home": "Գլխավոր",
-    "about": "Մեր մասին",
-    "divisions": "Բաժիններ",
-    "science": "Գիտություն",
-    "news": "Նորություններ",
-    "education": "Կրթություն",
-    "contact": "Կապ"
-  },
+{ 
+  "nav": {
+      "top": {
+        "home": "Գլխավոր",
+        "about": "Մեր մասին",
+        "divisions": "Բաժիններ",
+        "science": "Գիտություն",
+        "news": "Նորություններ",
+        "education": "Կրթություն",
+        "contact": "Կապ"
+      },
 
-  "about": {
-    "mission": "Առաքելություն",
-    "history": "Պատմություն",
-    "boardOfTrustees": "Խնամակալների խորհուրդ"
-  },
+      "about": {
+        "mission": "Առաքելություն",
+        "history": "Պատմություն",
+        "boardOfTrustees": "Խնամակալների խորհուրդ"
+      },
 
-  "divisions": {
-    "researchDivisions": "Հետազոտական բաժիններ",
-    "experimentalPhysics": "Փորձարարական ֆիզիկա",
-    "cosmologyAstrophysics": "Կոսմոլոգիա և աստղաֆիզիկա",
-    "quantumTechnologies": "Քվանտային տեխնոլոգիաներ",
-    "appliedPhysics": "Կիրառական ֆիզիկա"
-  },
+      "divisions": {
+        "researchDivisions": "Հետազոտական բաժիններ",
+        "experimentalPhysics": "Փորձարարական ֆիզիկա",
+        "cosmologyAstrophysics": "Կոսմոլոգիա և աստղաֆիզիկա",
+        "quantumTechnologies": "Քվանտային տեխնոլոգիաներ",
+        "appliedPhysics": "Կիրառական ֆիզիկա"
+      },
 
-  "science": {
-    "eventsHeading": "Միջոցառումներ",
-    "seminars": "Սեմինարներ"
-  },
+      "science": {
+        "eventsHeading": "Միջոցառումներ",
+        "seminars": "Սեմինարներ"
+      },
 
-  "news": {
-    "eventsHeading": "Միջոցառումներ",
-    "seminars": "Սեմինարներ"
-  },
+      "news": {
+        "eventsHeading": "Միջոցառումներ",
+        "seminars": "Սեմինարներ"
+      },
 
-  "education": {
-    "postgrad": {
-      "title": "Ասպիրանտուրա",
-      "description": "Նկարագրություն",
-      "admissionProcedure": "Ընդունելության կարգ",
-      "availableTraining": "Մատչելի ծրագրեր",
-      "distanceLearning": "Հեռավար ուսուցում",
-      "applicationForm": "Դիմումի ձև",
-      "program": "Ծրագիր",
-      "exams": "Քննություններ",
-      "schedule": "Ժամանակացույց",
-      "students": "Ուսանողներ",
-      "firstStage": "Առաջին փուլ",
-      "secondStage": "Երկրորդ փուլ",
-      "distanceFirstStage": "Առաջին փուլ (հեռավար)",
-      "distanceSecondStage": "Երկրորդ փուլ (հեռավար)"
-    },
-    "lecturers": {
-      "title": "Դասախոսներ",
-      "requiredDocuments": "Պահանջվող փաստաթղթեր",
-      "examSchedule": "Քննությունների ժամանակացույց",
-      "tuitionFees": "Վճարների մասին փաստաթղթեր",
-      "foreignStudents": "Օտարերկրացի ուսանողներ",
-      "programs": "Կրթական և զարգացման ծրագրեր",
-      "professionalCouncil": "ԴԴԿ 024 ֆիզիկայի մասնագիտական խորհրդի",
-      "a0402": "A 04 02",
-      "a0414": "A 04 14",
-      "nearbyDefenses": "Մոտակա պաշտպանություններ"
+      "education": {
+        "postgrad": {
+          "title": "Ասպիրանտուրա",
+          "description": "Նկարագրություն",
+          "admissionProcedure": "Ընդունելության կարգ",
+          "availableTraining": "Մատչելի ծրագրեր",
+          "distanceLearning": "Հեռավար ուսուցում",
+          "applicationForm": "Դիմումի ձև",
+          "program": "Ծրագիր",
+          "exams": "Քննություններ",
+          "schedule": "Ժամանակացույց",
+          "students": "Ուսանողներ",
+          "firstStage": "Առաջին փուլ",
+          "secondStage": "Երկրորդ փուլ",
+          "distanceFirstStage": "Առաջին փուլ (հեռավար)",
+          "distanceSecondStage": "Երկրորդ փուլ (հեռավար)"
+        },
+        "lecturers": {
+          "title": "Դասախոսներ",
+          "requiredDocuments": "Պահանջվող փաստաթղթեր",
+          "examSchedule": "Քննությունների ժամանակացույց",
+          "tuitionFees": "Վճարների մասին փաստաթղթեր",
+          "foreignStudents": "Օտարերկրացի ուսանողներ",
+          "programs": "Կրթական և զարգացման ծրագրեր",
+          "professionalCouncil": "ԴԴԿ 024 ֆիզիկայի մասնագիտական խորհրդի",
+          "a0402": "A 04 02",
+          "a0414": "A 04 14",
+          "nearbyDefenses": "Մոտակա պաշտպանություններ"
+        }
+      },
+      "language": {
+        "english": "Անգլերեն",
+        "armenian": "Հայերեն"
+      }
     }
-  }
 }

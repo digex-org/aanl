@@ -7,6 +7,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-06-04',
   devtools: { enabled: true },
 
+  // Your app lives in project-root/
   srcDir: 'project-root/',
   pages: true,
 
@@ -20,46 +21,66 @@ export default defineNuxtConfig({
 
   modules: [
     '@pinia/nuxt',
-    '@nuxtjs/i18n',
-    '@nuxt/image'
-  ],
 
-  /** 🔹 nuxt-i18n configuration */
-  i18n: {
-    // folder INSIDE srcDir (project-root/)
-    langDir: 'locales',
-    lazy: true,
+    // ✅ Configure i18n via module options (no top-level `i18n` key → no TS error)
+    [
+      '@nuxtjs/i18n',
+      {
+        // ---- routing / basic options ----
+        defaultLocale: 'en',
+        strategy: 'prefix_except_default', // /, /hy/...
+        lazy: true,
+        // Base dir for locale files (relative to project root, where nuxt.config.ts is)
+        langDir: 'locales',
 
-    locales: [
+        // ---- locales & files ----
+        // Make sure these files actually exist in AANL-PORTAL/i18n/locales/...
+         locales: [
       {
         code: 'en',
         iso: 'en-US',
         name: 'English',
-        file: 'en/index.ts'      // -> project-root/locales/en/index.ts
+        files: [
+          'en/common.json',
+          'en/divisions.json',
+          'en/home.json',
+          'en/nav.json',
+          'en/events.json',
+          'en/news.json',
+          'en/division-detail.json',
+          'en/quickAccess.json'
+          // add more if you create them, e.g. 'en/home.json'
+        ]
       },
       {
         code: 'hy',
         iso: 'hy-AM',
         name: 'Հայերեն',
-        file: 'hy/index.ts'      // -> project-root/locales/hy/index.ts
+        files: [
+          'hy/common.json',
+          'hy/divisions.json',
+          'hy/home.json',
+          'hy/nav.json',
+          'hy/events.json',
+          'hy/news.json',
+          'hy/division-detail.json',
+          'hy/quickAccess.json'
+          // add more if you create them, e.g. 'hy/home.json'
+        ]
+      }
+    ],
+        // ---- browser language / cookie behaviour ----
+        detectBrowserLanguage: {
+          useCookie: true,
+          cookieKey: 'i18n_redirected',
+          redirectOn: 'root',   // only when user first hits "/"
+          alwaysRedirect: false // don't override manual language choice
+        }
       }
     ],
 
-    defaultLocale: 'en',
-
-    // 🔥 This is what should create /hy/... routes
-    strategy: 'prefix_except_default',
-
-    detectBrowserLanguage: {
-      useCookie: true,
-      cookieKey: 'i18n_redirected',
-      redirectOn: 'root',
-      alwaysRedirect: false
-    },
-
-    // i18n.config.ts is under srcDir, so "~" works
-    vueI18n: '~/i18n.config.ts'
-  },
+    '@nuxt/image'
+  ],
 
   typescript: { strict: true },
 

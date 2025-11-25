@@ -1,16 +1,27 @@
 {
-  "body": "AANL Experimental Physics Division (EPD) has a long lasting tradition of research in high energy experimental physics in a wide range of topics. During 1970–1991s, the Yerevan electron synchrotron (ARUS) operated productively and many significant results were obtained. Physicists of EPD succeeded in receiving a number of important results which allowed to promote the understanding of hadron and nuclei structure and fundamental properties. The reputation of the institute as accelerator physics and accelerator center helps to preserve and develop international cooperation with scientific centers in the USA, Germany, Switzerland and others, fully incorporating EPD in their experimental research programs.\n\nCurrent programs include low-energy nuclear physics investigations on the electron linear accelerator LUE-75 and proton cyclotron C18/18, nuclear reaction studies, detector calibrations and test-beams, and research of materials science.",
-  "quickAccessTitle": "Quick access",
-  "quickAccessItems": {
-    "employees": "Employees",
-    "news": "News",
-    "seminars": "Seminars"
-  },
-  "collaborationsTitle": "Collaborations",
-  "careerTitle": "Career and Education Opportunities",
-  "careerDescription": "Prospective students and researchers can apply for PhD and junior researcher positions, as well as take part in exchange studies, internships and summer schools.",
-  "careerCta": "Learn More",
-  "notFoundTitle": "Division not found",
-  "notFoundText": "Please check the URL or return to the",
-  "breadcrumbsDivisions": "Divisions"
+  "divisionDetail": {
+    "bodies": {
+      "experimental-physics": "AANL Experimental Physics Division (EPD) has a long lasting tradition of research in high energy experimental physics in a wide range of topics. During 1970–1991s, the Yerevan electron synchrotron (ARUS) operated productively and many significant results were obtained. Physicists of EPD succeeded in receiving a number of important results which allowed to promote the understanding of hadron and nuclei structure and fundamental properties. The reputation of the institute as accelerator physics and accelerator center helps to preserve and develop international cooperation with scientific centers in the USA, Germany, Switzerland and others, fully incorporating EPD in their experimental research programs.\n\nCurrent programs include low-energy nuclear physics investigations on the electron linear accelerator LUE-75 and proton cyclotron C18/18, nuclear reaction studies, detector calibrations and test-beams, and research of materials science.",
+      "cosmology-astrophysics": "AANL Experimental Physics Division (EPD) has a long lasting tradition of research in high energy experimental physics in a wide range of topics. During 1970–1991s, the Yerevan electron synchrotron (ARUS) operated productively and many significant results were obtained. Physicists of EPD succeeded in receiving a number of important results which allowed to promote the understanding of hadron and nuclei structure and fundamental properties. The reputation of the institute as accelerator physics and accelerator center helps to preserve and develop international cooperation with scientific centers in the USA, Germany, Switzerland and others, fully incorporating EPD in their experimental research programs.\n\nCurrent programs include low-energy nuclear physics investigations on the electron linear accelerator LUE-75 and proton cyclotron C18/18, nuclear reaction studies, detector calibrations and test-beams, and research of materials science.",
+      "quantum-technologies": "AANL Experimental Physics Division (EPD) has a long lasting tradition of research in high energy experimental physics in a wide range of topics. During 1970–1991s, the Yerevan electron synchrotron (ARUS) operated productively and many significant results were obtained. Physicists of EPD succeeded in receiving a number of important results which allowed to promote the understanding of hadron and nuclei structure and fundamental properties. The reputation of the institute as accelerator physics and accelerator center helps to preserve and develop international cooperation with scientific centers in the USA, Germany, Switzerland and others, fully incorporating EPD in their experimental research programs.\n\nCurrent programs include low-energy nuclear physics investigations on the electron linear accelerator LUE-75 and proton cyclotron C18/18, nuclear reaction studies, detector calibrations and test-beams, and research of materials science.",
+      "applied-physics": "AANL Experimental Physics Division (EPD) has a long lasting tradition of research in high energy experimental physics in a wide range of topics. During 1970–1991s, the Yerevan electron synchrotron (ARUS) operated productively and many significant results were obtained. Physicists of EPD succeeded in receiving a number of important results which allowed to promote the understanding of hadron and nuclei structure and fundamental properties. The reputation of the institute as accelerator physics and accelerator center helps to preserve and develop international cooperation with scientific centers in the USA, Germany, Switzerland and others, fully incorporating EPD in their experimental research programs.\n\nCurrent programs include low-energy nuclear physics investigations on the electron linear accelerator LUE-75 and proton cyclotron C18/18, nuclear reaction studies, detector calibrations and test-beams, and research of materials science."
+    },
+
+    "quickAccessTitle": "Quick access",
+    "quickAccessItems": {
+      "employees": "Employees",
+      "news": "News",
+      "seminars": "Seminars"
+    },
+
+    "collaborationsTitle": "Collaborations",
+
+    "careerTitle": "Career and Education Opportunities",
+    "careerDescription": "Prospective students and researchers can apply for PhD and junior researcher positions, as well as take part in exchange studies, internships and summer schools.",
+    "careerCta": "Learn more",
+
+    "notFoundTitle": "Division not found",
+    "notFoundText": "Please check the URL or return to the",
+    "breadcrumbsDivisions": "Divisions"
+  }
 }

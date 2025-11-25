@@ -1,0 +1,12 @@
+{
+   "quickAccess": {
+      "title": "Արագ մուտք",
+      "collapseAll": "Փակել բոլորը",
+      "open": "Տեսնել",
+      "quickAccessItems": {
+        "employees": "Աշխատակիցներին",
+        "news": "Նորությունները",
+        "seminars": "Սեմինարները"
+      }
+    }
+}

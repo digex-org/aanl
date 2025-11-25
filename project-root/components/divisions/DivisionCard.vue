@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useI18n } from '#imports'
+import { useI18n, useLocalePath } from '#imports'
 import type { Division } from '~/data/divisions'
 
 const props = defineProps<{ item: Division }>()
 
-const { t } = useI18n()
+// ✅ i18n
+const { t, te } = useI18n()
+const localePath = useLocalePath()
 
 // Resolve image from assets
 const mods = import.meta.glob('~/assets/images/divisions/*', {
@@ -19,33 +21,36 @@ const byFile = Object.fromEntries(
 
 const src = computed(() => byFile[props.item.image] || '')
 
-// i18n-aware title / excerpt with graceful fallback
+/* ---------- i18n-aware title / excerpt with te() fallback ---------- */
+
 const titleText = computed(() => {
   const slug = props.item.slug
   const key = `divisions.items.${slug}.title`
-  const translated = t(key) as string
-
-  // if key is missing vue-i18n returns the key itself
-  return translated === key ? props.item.title : translated
+  return te(key) ? t(key) : props.item.title
 })
 
 const excerptText = computed(() => {
   const slug = props.item.slug
   const key = `divisions.items.${slug}.excerpt`
-  const translated = t(key) as string
-  return translated === key ? props.item.excerpt : translated
+  return te(key) ? t(key) : props.item.excerpt
 })
 
-// Solid TOP BORDER color map (brand blue included)
+/* ---------- Locale-aware URL ---------- */
+const divisionUrl = computed(() =>
+  localePath(`/divisions/${props.item.slug}`)
+)
+
+/* ---------- Accent top border ---------- */
+
 function topBorderColor(a?: Division['accent']) {
   switch (a) {
-    case 'blue':   return 'border-t-[#1D50A2]'  // brand blue
+    case 'blue':   return 'border-t-[#1D50A2]'
     case 'pink':   return 'border-t-rose-500'
     case 'orange': return 'border-t-amber-400'
     case 'green':  return 'border-t-emerald-500'
     case 'purple': return 'border-t-fuchsia-500'
     case 'teal':   return 'border-t-teal-400'
-    default:       return 'border-t-[#1D50A2]'  // fallback = brand blue
+    default:       return 'border-t-[#1D50A2]'
   }
 }
 </script>
@@ -61,7 +66,7 @@ function topBorderColor(a?: Division['accent']) {
     ]"
   >
     <NuxtLink
-      :to="`/divisions/${item.slug}`"
+      :to="divisionUrl"
       class="flex flex-col flex-1 focus:outline-none"
     >
       <figure class="overflow-hidden">

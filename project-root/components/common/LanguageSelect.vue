@@ -2,7 +2,7 @@
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { useI18n, useSwitchLocalePath } from '#imports'
 
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 const switchLocalePath = useSwitchLocalePath()
 
 const open = ref(false)
@@ -83,7 +83,7 @@ onBeforeUnmount(() => document.removeEventListener('click', onClickOutside))
           <IconsIconFlagEn
             :class="locale === 'en' ? 'opacity-100' : 'opacity-70'"
           />
-          <span>English</span>
+          <span>{{ t('nav.language.english') || 'English' }}</span>
         </NuxtLink>
 
         <!-- HY -->
@@ -97,7 +97,7 @@ onBeforeUnmount(() => document.removeEventListener('click', onClickOutside))
           <IconsIconFlagHy
             :class="locale === 'hy' ? 'opacity-100' : 'opacity-70'"
           />
-          <span>Հայերեն</span>
+          <span>{{ t('nav.language.armenian') || 'Հայերեն' }}</span>
         </NuxtLink>
       </div>
     </transition>
