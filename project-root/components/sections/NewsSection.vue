@@ -16,7 +16,6 @@ const props = withDefaults(defineProps<{
   items?: NewsItem[]
   maxItems?: number
 }>(), {
-  title: undefined,
   allHref: '/news',
   maxItems: 8
 })

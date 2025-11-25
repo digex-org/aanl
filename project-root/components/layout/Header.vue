@@ -9,19 +9,17 @@ import LanguageSelect from '~/components/common/LanguageSelect.vue'
 /** --- i18n helpers --- */
 const { t } = useI18n()
 
-const navText = (item: { label: string; labelKey?: string | undefined }) => {
+const navText = (item: { label: string; labelKey?: string }) => {
   if (item.labelKey) {
     const translated = t(item.labelKey)
-    // If translation exists and is different from the key, use it
     if (translated && translated !== item.labelKey) {
       return translated
     }
   }
-  // Fallback to static label from navigation.ts
   return item.label
 }
 
-const groupTitle = (group: { title?: string | undefined; titleKey?: string | undefined }) => {
+const groupTitle = (group: { title?: string; titleKey?: string }) => {
   if (group.titleKey) {
     const translated = t(group.titleKey)
     if (translated && translated !== group.titleKey) {
@@ -124,7 +122,7 @@ const mobileLinks = mobileNavLinks(NAV)
     class="relative bg-white border-b border-slate-200"
     data-nav-root
   >
-    <div class="mx-auto px-2 md:px-4 xl:px-[40px]">
+    <div class="mx-auto ml-10 mr-10 lg:ml-20 lg:mr-20 md:ml-2 md:mr-2 sm:ml-0 sm:mr-0 px-2 md:px-2 xl:px-8">
       <!-- Top bar -->
       <div class="h-[66px] flex items-center justify-between gap-6">
         <!-- Logo -->
@@ -235,56 +233,35 @@ const mobileLinks = mobileNavLinks(NAV)
         :aria-label="`${navText(currentMega)} menu`"
       >
         <div class="container mx-auto px-4 md:px-8 xl:px-[141px] py-8">
-          <div
-            class="grid gap-8"
-            :class="{
-              'md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2': (currentMega.mega?.columns?.length || 0) === 2,
-              'md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3': (currentMega.mega?.columns?.length || 0) === 3,
-              'md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4': (currentMega.mega?.columns?.length || 0) >= 4
-            }"
-          >
-            <!-- Column(s) -->
-            <div
-              v-for="(col, idx) in (currentMega.mega?.columns || [])"
-              :key="currentMega.label + ':' + idx"
-              class="min-w-[220px]"
-            >
-              <p
-                v-if="col.title || col.titleKey"
-                class="px-2 pb-2 text-[13px] font-semibold text-slate-500 uppercase tracking-wide"
+          <!-- Two-column layout: left = menu columns, right = image -->
+          <div class="grid gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] items-stretch">
+            <!-- LEFT: Columns (unchanged logic, just wrapped) -->
+            <div>
+              <div
+                class="grid gap-8"
+                :class="{
+                  'md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2': (currentMega.mega?.columns?.length || 0) === 2,
+                  'md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3': (currentMega.mega?.columns?.length || 0) === 3,
+                  'md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4': (currentMega.mega?.columns?.length || 0) >= 4
+                }"
               >
-                {{ groupTitle(col) }}
-              </p>
-
-              <!-- Plain items -->
-              <div v-if="col.items?.length" class="flex flex-col">
-                <NuxtLink
-                  v-for="link in col.items"
-                  :key="link.href"
-                  :to="link.href"
-                  class="px-2 py-2 rounded-lg text-[15px] text-slate-700 hover:bg-slate-50 hover:text-slate-900"
-                  @click="openDesktopKey = null"
-                >
-                  {{ navText(link) }}
-                </NuxtLink>
-              </div>
-
-              <!-- Grouped sections -->
-              <div v-if="col.groups?.length" class="mt-3 space-y-3">
-                <section
-                  v-for="(g, gi) in col.groups"
-                  :key="gi"
-                  class="border-t border-slate-100 pt-3 first:border-0 first:pt-0"
+                <!-- Column(s) -->
+                <div
+                  v-for="(col, idx) in (currentMega.mega?.columns || [])"
+                  :key="currentMega.label + ':' + idx"
+                  class="min-w-[220px]"
                 >
                   <p
-                    v-if="g.title || g.titleKey"
-                    class="px-2 pb-2 text-[12px] font-medium text-slate-500 uppercase tracking-wide"
+                    v-if="col.title || col.titleKey"
+                    class="px-2 pb-2 text-[13px] font-semibold text-slate-500 uppercase tracking-wide"
                   >
-                    {{ groupTitle(g) }}
+                    {{ groupTitle(col) }}
                   </p>
-                  <div class="flex flex-col">
+
+                  <!-- Plain items -->
+                  <div v-if="col.items?.length" class="flex flex-col">
                     <NuxtLink
-                      v-for="link in (g.items || [])"
+                      v-for="link in col.items"
                       :key="link.href"
                       :to="link.href"
                       class="px-2 py-2 rounded-lg text-[15px] text-slate-700 hover:bg-slate-50 hover:text-slate-900"
@@ -293,7 +270,55 @@ const mobileLinks = mobileNavLinks(NAV)
                       {{ navText(link) }}
                     </NuxtLink>
                   </div>
-                </section>
+
+                  <!-- Grouped sections -->
+                  <div v-if="col.groups?.length" class="mt-3 space-y-3">
+                    <section
+                      v-for="(g, gi) in col.groups"
+                      :key="gi"
+                      class="border-t border-slate-100 pt-3 first:border-0 first:pt-0"
+                    >
+                      <p
+                        v-if="g.title || g.titleKey"
+                        class="px-2 pb-2 text-[12px] font-medium text-slate-500 uppercase tracking-wide"
+                      >
+                        {{ groupTitle(g) }}
+                      </p>
+                      <div class="flex flex-col">
+                        <NuxtLink
+                          v-for="link in (g.items || [])"
+                          :key="link.href"
+                          :to="link.href"
+                          class="px-2 py-2 rounded-lg text-[15px] text-slate-700 hover:bg-slate-50 hover:text-slate-900"
+                          @click="openDesktopKey = null"
+                        >
+                          {{ navText(link) }}
+                        </NuxtLink>
+                      </div>
+                    </section>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT: Illustration / image for current top-level item -->
+            <div v-if="currentMega.icon" class="hidden md:block">
+              <div
+                class="relative h-full min-h-[220px] rounded-2xl overflow-hidden border border-slate-200/80 bg-slate-50"
+              >
+                <NuxtImg
+                  :src="currentMega.icon"
+                  :alt="navText(currentMega)"
+                  class="h-full w-full object-cover"
+                />
+                <div
+                  class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent"
+                ></div>
+                <div class="absolute bottom-3 left-3 right-3">
+                  <p class="text-sm font-semibold text-white drop-shadow-sm">
+                    {{ navText(currentMega) }}
+                  </p>
+                </div>
               </div>
             </div>
           </div>

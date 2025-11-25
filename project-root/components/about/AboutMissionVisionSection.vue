@@ -21,7 +21,7 @@ At AANL, our vision is to drive innovation, sustainability, and excellence in ev
       </p>
 
       <NuxtLink
-        to="/mission"
+        to="/about/mission"
         class="inline-flex items-center gap-2 mt-5 px-5 py-2 rounded-full border border-[#1D50A2] text-[#1D50A2] font-medium hover:bg-[#1D50A2]/10 transition"
       >
         More
@@ -40,7 +40,7 @@ At AANL, our vision is to drive innovation, sustainability, and excellence in ev
       </p>
 
       <NuxtLink
-        to="/vision"
+        to="/about/mission"
         class="inline-flex items-center gap-2 mt-5 px-5 py-2 rounded-full border border-[#1D50A2] text-[#1D50A2] font-medium hover:bg-[#1D50A2]/10 transition"
       >
         More

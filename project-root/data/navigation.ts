@@ -2,15 +2,16 @@
 
 export type NavLink = {
   label: string
-  labelKey?: string   // i18n key, e.g. "nav.about.mission"
   href: string
+  labelKey?: string        // i18n key, e.g. "nav.about.mission"
   external?: boolean
   target?: '_blank' | '_self'
+  icon?: string            // optional icon URL/path
 }
 
 export type NavGroup = {
   title?: string
-  titleKey?: string   // i18n key for column / group titles
+  titleKey?: string        // i18n key for column / group titles
   items?: NavLink[]
   groups?: NavGroup[]
 }
@@ -23,13 +24,16 @@ export type TopLevelNav = {
     width?: 'md' | 'lg' | 'xl'
     columns: NavGroup[]
   }
+  icon?: string            // optional icon for top-level item
 }
 
+// NOTE: icon paths are placeholders – adjust to match your assets structure
 export const NAV: TopLevelNav[] = [
   {
     label: 'About',
     labelKey: 'nav.top.about',
     href: '/about',
+    icon: '/images/nav/history-1943.webp',
     mega: {
       columns: [
         {
@@ -37,17 +41,20 @@ export const NAV: TopLevelNav[] = [
             {
               label: 'Mission',
               labelKey: 'nav.about.mission',
-              href: '/about/mission'
+              href: '/about/mission',
+
             },
             {
               label: 'History',
               labelKey: 'nav.about.history',
-              href: '/about/history'
+              href: '/about/history',
+
             },
             {
               label: 'Board of trustees',
               labelKey: 'nav.about.boardOfTrustees',
-              href: '/about/board-of-trustees'
+              href: '/about/board-of-trustees',
+
             }
           ]
         }
@@ -59,6 +66,8 @@ export const NAV: TopLevelNav[] = [
     label: 'Divisions',
     labelKey: 'nav.top.divisions',
     href: '/divisions',
+    icon: '/images/nav/Leonardo_Phoenix_Photorealistic_depiction_of_quantum_physics.webp',
+
     mega: {
       columns: [
         {
@@ -68,22 +77,26 @@ export const NAV: TopLevelNav[] = [
             {
               label: 'Experimental physics',
               labelKey: 'nav.divisions.experimentalPhysics',
-              href: '/divisions/experimental-physics'
+              href: '/divisions/experimental-physics',
+
             },
             {
               label: 'Cosmology & astrophysics',
               labelKey: 'nav.divisions.cosmologyAstrophysics',
-              href: '/divisions/cosmology-astrophysics'
+              href: '/divisions/cosmology-astrophysics',
+       
             },
             {
               label: 'Quantum technologies',
               labelKey: 'nav.divisions.quantumTechnologies',
-              href: '/divisions/quantum-technologies'
+              href: '/divisions/quantum-technologies',
+
             },
             {
               label: 'Applied physics',
               labelKey: 'nav.divisions.appliedPhysics',
-              href: '/divisions/applied-physics'
+              href: '/divisions/applied-physics',
+
             }
           ]
         }
@@ -95,6 +108,7 @@ export const NAV: TopLevelNav[] = [
     label: 'Science',
     labelKey: 'nav.top.science',
     href: '/science',
+    icon: '/images/nav/Leonardo_Phoenix_Photorealistic_depiction_of_quantum_physics.webp',
     mega: {
       columns: [
         {
@@ -104,7 +118,8 @@ export const NAV: TopLevelNav[] = [
             {
               label: 'Seminars',
               labelKey: 'nav.science.seminars',
-              href: '/science/seminars'
+              href: '/seminars',
+
             }
           ]
         }
@@ -116,6 +131,7 @@ export const NAV: TopLevelNav[] = [
     label: 'News',
     labelKey: 'nav.top.news',
     href: '/news',
+    icon: '/images/nav/Leonardo_Phoenix_Photorealistic_depiction_of_quantum_physics.webp',
     mega: {
       columns: [
         {
@@ -125,7 +141,8 @@ export const NAV: TopLevelNav[] = [
             {
               label: 'Seminars',
               labelKey: 'nav.news.seminars',
-              href: '/science/seminars'
+              href: '/seminars',
+
             }
           ]
         }
@@ -137,6 +154,7 @@ export const NAV: TopLevelNav[] = [
     label: 'Education',
     labelKey: 'nav.top.education',
     href: '/education',
+    icon: '/images/nav/admission.webp',
     mega: {
       width: 'xl',
       columns: [
@@ -148,7 +166,8 @@ export const NAV: TopLevelNav[] = [
             {
               label: 'Description',
               labelKey: 'nav.education.postgrad.description',
-              href: '/education/postgraduate-studies'
+              href: '/education/postgraduate-study/applicant',
+
             }
           ],
           groups: [
@@ -164,12 +183,14 @@ export const NAV: TopLevelNav[] = [
                 {
                   label: '1st stage admission',
                   labelKey: 'nav.education.postgrad.firstStage',
-                  href: '/education/postgraduate-studies/admission/first-stage'
+                  href: '/education/postgraduate-study/admission',
+                  icon: '/images/nav/education-postgrad-first-stage.svg'
                 },
                 {
                   label: '2nd stage admission',
                   labelKey: 'nav.education.postgrad.secondStage',
-                  href: '/education/postgraduate-studies/admission/second-stage'
+                  href: '/education/postgraduate-study/admission',
+
                 }
               ]
             },
@@ -180,12 +201,14 @@ export const NAV: TopLevelNav[] = [
                 {
                   label: '1st stage admission',
                   labelKey: 'nav.education.postgrad.distanceFirstStage',
-                  href: '/education/postgraduate-studies/distance/first-stage'
+                  href: '/education/postgraduate-study/admission',
+                  icon: '/images/nav/education-postgrad-distance-first-stage.svg'
                 },
                 {
                   label: '2nd stage admission',
                   labelKey: 'nav.education.postgrad.distanceSecondStage',
-                  href: '/education/postgraduate-studies/distance/second-stage'
+                  href: '/education/postgraduate-study/admission',
+                  icon: '/images/nav/education-postgrad-distance-second-stage.svg'
                 }
               ]
             },
@@ -196,7 +219,8 @@ export const NAV: TopLevelNav[] = [
                 {
                   label: 'Application form',
                   labelKey: 'nav.education.postgrad.applicationForm',
-                  href: '/education/postgraduate-studies/application-form'
+                  href: '/education/postgraduate-study/application-form',
+
                 }
               ]
             },
@@ -205,22 +229,26 @@ export const NAV: TopLevelNav[] = [
                 {
                   label: 'Program',
                   labelKey: 'nav.education.postgrad.program',
-                  href: '/education/postgraduate-studies/program'
+                  href: '/education/postgraduate-study/admissionm',
+                  icon: '/images/nav/education-postgrad-program.svg'
                 },
                 {
                   label: 'Exams',
                   labelKey: 'nav.education.postgrad.exams',
-                  href: '/education/postgraduate-studies/exams'
+                  href: '/education/postgraduate-study/admission',
+
                 },
                 {
                   label: 'Schedule',
                   labelKey: 'nav.education.postgrad.schedule',
-                  href: '/education/postgraduate-studies/schedule'
+                  href: '/education/postgraduate-study/admission',
+
                 },
                 {
                   label: 'Students',
                   labelKey: 'nav.education.postgrad.students',
-                  href: '/education/postgraduate-studies/students'
+                  href: '/education/postgraduate-study/admission',
+
                 }
               ]
             }
@@ -235,27 +263,32 @@ export const NAV: TopLevelNav[] = [
             {
               label: 'Required documents',
               labelKey: 'nav.education.lecturers.requiredDocuments',
-              href: '/education/lecturers/required-documents'
+              href: '/education/postgraduate-study/admission',
+
             },
             {
               label: 'Exam schedule',
               labelKey: 'nav.education.lecturers.examSchedule',
-              href: '/education/lecturers/exam-schedule'
+              href: '/education/postgraduate-study/admission',
+
             },
             {
               label: 'Important documents (tuition fee amount)',
               labelKey: 'nav.education.lecturers.tuitionFees',
-              href: '/education/lecturers/tuition-fees'
+              href: '/education/postgraduate-study/admission',
+
             },
             {
               label: 'Foreign students',
               labelKey: 'nav.education.lecturers.foreignStudents',
-              href: '/education/lecturers/foreign-students'
+              href: '/education/postgraduate-study/admission',
+
             },
             {
               label: 'Educational and development programs (courses)',
               labelKey: 'nav.education.lecturers.programs',
-              href: '/education/lecturers/programs'
+              href: '/education/postgraduate-study/admission',
+
             }
           ],
           groups: [
@@ -266,12 +299,14 @@ export const NAV: TopLevelNav[] = [
                 {
                   label: 'A 04 02',
                   labelKey: 'nav.education.lecturers.a0402',
-                  href: '/education/lecturers/professional-council/a0402'
+                  href: '/education/postgraduate-study/admission',
+
                 },
                 {
                   label: 'A 04 14',
                   labelKey: 'nav.education.lecturers.a0414',
-                  href: '/education/lecturers/professional-council/a0414'
+                  href: '/education/postgraduate-study/admission',
+
                 }
               ]
             },
@@ -280,7 +315,8 @@ export const NAV: TopLevelNav[] = [
                 {
                   label: 'Nearby defenses',
                   labelKey: 'nav.education.lecturers.nearbyDefenses',
-                  href: '/education/lecturers/nearby-defenses'
+                  href: '/education/postgraduate-study/admission',
+ 
                 }
               ]
             }
@@ -293,24 +329,34 @@ export const NAV: TopLevelNav[] = [
   {
     label: 'Contact',
     labelKey: 'nav.top.contact',
-    href: '/contact'
+    href: '/contact',
+    icon: '/images/nav/contact.svg'
   }
 ]
 
-// unchanged helper, but keep labelKey on top-level links
+// Flattened mobile nav links (for mobile drawer)
 export function mobileNavLinks(nav: TopLevelNav[] = NAV): NavLink[] {
   const out: NavLink[] = []
+
   for (const item of nav) {
     if (item.href) {
-      out.push({
+      // Build object step-by-step to avoid labelKey/icon: undefined
+      const base: NavLink = {
         label: item.label,
-        labelKey: item.labelKey,
         href: item.href
-      })
+      }
+
+      if (item.labelKey) base.labelKey = item.labelKey
+      if (item.icon) base.icon = item.icon
+
+      out.push(base)
     }
+
     if (item.mega?.columns?.length) {
       for (const col of item.mega.columns) {
-        if (col.items) out.push(...col.items)
+        if (col.items) {
+          out.push(...col.items)
+        }
         if (col.groups) {
           for (const g of col.groups) {
             if (g.items) out.push(...g.items)
@@ -319,10 +365,14 @@ export function mobileNavLinks(nav: TopLevelNav[] = NAV): NavLink[] {
       }
     }
   }
+
+  // De-duplicate by href
   const seen = new Set<string>()
-  return out.filter(l =>
-    l.href && !seen.has(l.href) ? (seen.add(l.href), true) : false
-  )
+  return out.filter(link => {
+    if (seen.has(link.href)) return false
+    seen.add(link.href)
+    return true
+  })
 }
 
 export default NAV

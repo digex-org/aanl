@@ -12,25 +12,35 @@ const props = withDefaults(
     allButtonClass?: string
     allHref?: string
     showAllButton?: boolean
+    /** How many divisions to show (0 = all) */
+    maxItems?: number
   }>(),
   {
-    // no default for title → it's truly optional
     allHref: '/divisions',
     showAllButton: true,
     allButtonClass:
       'text-[#1D50A2] border-1 border-[#1D50A2] ' +
       'hover:bg-[#1D50A2] hover:text-white ' +
-      'focus-visible:ring-[#1D50A2]'
+      'focus-visible:ring-[#1D50A2]',
+    // 👇 8 items → on lg (4 cols) we get 2 rows
+    maxItems: 8
   }
 )
 
-const list = computed(() => (props.items?.length ? props.items : source))
+const baseList = computed<Division[]>(() =>
+  props.items?.length ? props.items : source
+)
 
-// i18n-aware title & button label with prop override
+const list = computed<Division[]>(() => {
+  if (props.maxItems && props.maxItems > 0) {
+    return baseList.value.slice(0, props.maxItems)
+  }
+  return baseList.value
+})
+
 const titleText = computed(() => props.title ?? t('divisions.grid.title'))
 const seeMoreText = computed(() => t('divisions.grid.seeMore'))
 </script>
-
 
 <template>
   <section class="dark:bg-gray-950" aria-labelledby="divisions-title">
@@ -45,16 +55,16 @@ const seeMoreText = computed(() => t('divisions.grid.seeMore'))
         </h2>
       </div>
 
+      <!-- 👇 Grid: <lg = 2 cols, lg+ = 4 cols -->
       <div
         class="grid gap-4 sm:gap-5 lg:gap-6
-               grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+               grid-cols-2 lg:grid-cols-4"
       >
         <div v-for="d in list" :key="d.slug" class="h-full">
           <DivisionsDivisionCard :item="d" />
         </div>
       </div>
 
-      <!-- Bottom-centered “All Divisions” -->
       <div v-if="showAllButton" class="mt-8 flex justify-center">
         <NuxtLink
           :to="allHref"

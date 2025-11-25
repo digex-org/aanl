@@ -50,7 +50,7 @@ The article is dedicated to the great physicist John Archibald Wheeler and is av
     date: '2024-10-03',
     category: 'Science',
     divisionSlug: 'center-for-cosmology-and-astrophysics',
-    coverImage: 'news-fetured-img.webp',
+    coverImage: 'akopovbd 1.webp',
     featured: true
   },
   {
@@ -68,7 +68,7 @@ The conference brought together researchers from leading institutes worldwide to
     date: '2024-12-22',
     category: 'Conference',
     divisionSlug: 'experimental-physics-division',
-    coverImage: 'akopovbd 1.webp',
+    coverImage: 'news-fetured-img.webp',
     featured: false
   },
   {
@@ -103,7 +103,7 @@ The collection includes key monographs, textbooks and review articles that have 
     date: '2024-11-20',
     category: 'Library',
     divisionSlug: 'cosmology-astrophysics',
-    coverImage: 'dan-cristian-padure.webp'
+    coverImage: 'news-fetured-img.webp'
   }
 ]
 
