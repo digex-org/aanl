@@ -5,7 +5,9 @@ import { defineNuxtConfig } from 'nuxt/config'
 
 export default defineNuxtConfig({
   compatibilityDate: '2024-06-04',
-  devtools: { enabled: true },
+    devtools: {
+    enabled: process.env.NODE_ENV === 'development'
+  },
 
   // Your app lives in project-root/
   srcDir: 'project-root/',
